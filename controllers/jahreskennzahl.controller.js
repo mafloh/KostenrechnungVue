@@ -1,4 +1,5 @@
 const Jahreskennzahl = require("../models/jahreskennzahl.model")
+const {findAll} = require('./common.controller.js')
 
 
 //Create and Save new item
@@ -29,21 +30,6 @@ exports.create = async (req, res) => {
 
 // Retrieve all from the database 
 exports.findAll = async (req, res) => {
-    try {
-        const produkt_id = req.query.produkt_id; 
-        const jahr = req.query.jahr;
-        let condition = produkt_id || jahr ? {name: produkt_id, jahr: jahr} : {} //alternative mit regex: //let condition = name ? { name: { $regex: new ReqExp(name), $options: "i"} } : {};
-        const jahreskennzahlen = await Jahreskennzahl.find(condition)
-        .then (data => {
-            res.send(data)
-        })
-
-    } catch {
-        err => {
-        res.status(500).send({
-            message:
-                err.message || "Ein Fehler ist beim abrufen der Jahreskennzahlen passiert."
-        })
-    }
-    }
+    console.log('test');
+    await findAll(Jahreskennzahl, req.query, res);
 }
