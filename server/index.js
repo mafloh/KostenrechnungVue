@@ -7,6 +7,7 @@ const bodyParser = require('body-parser')
 const cors = require("cors")
 const produkteRouter = require('../routes/produkte.routes')
 const jahreskennzahlenRouter = require('../routes/jahreskennzahlen.routes')
+const extraEinnahmenRouter = require('../routes/extraEinnahmen.routes')
 
 const app = express()
 
@@ -40,6 +41,7 @@ const port = process.env.PORT || 5000
 //Routes
 app.use('/api/produkte', produkteRouter)
 app.use('/api/jahreskennzahlen', jahreskennzahlenRouter)
+app.use('/api/extraeinnahmen', extraEinnahmenRouter)
 
 
 app.listen(port, () => console.log(`Server started on port ${port}`)) 
