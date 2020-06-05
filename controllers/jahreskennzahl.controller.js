@@ -1,35 +1,29 @@
-const Jahreskennzahl = require("../models/jahreskennzahl.model")
-const {findAll} = require('./common.controller.js')
+const Model = require("../models/jahreskennzahl.model")
+const commonController = require('./common.controller.js')
+
 
 
 //Create and Save new item
 
 exports.create = async (req, res) => {
-    if (!req.body.produkt_id || !req.body.jahr) {
-        res.status(400).send({ message: "Inhalt kann nicht leer sein."})
-        return
-    }
-
-    const jahreskennzahl = new Jahreskennzahl ({
-        produkt_id: req.body.produkt_id,
-        jahr: req.body.jahr
-    })
-    try {
-        const newJahreskennzahl = await jahreskennzahl.save()
-        .then (data => {
-            res.send(data)
-        })
-    } catch {
-        res.status(500).send({
-            message: 
-                err.message || "Ein Fehler ist passiert beim Anlegen des Eintrages."
-        })
-    }
+    const keyValueObject = req.body 
+    await commonController.create(Model, keyValueObject, res)
 }
 
 
 // Retrieve all from the database 
 exports.findAll = async (req, res) => {
-    console.log('test');
-    await findAll(Jahreskennzahl, req.query, res);
+    await commonController.findAll(Model, res);
 }
+
+exports.update = async (req, res) => {
+    const id = req.params.id
+    const DataToUpdate = req.body
+    await commonController.update(id, Model, DataToUpdate, res)
+}
+
+exports.delete = async (req, res) => { 
+    const id = req.params.id
+    await commonController.delete(id, Model, res)
+}
+

@@ -1,54 +1,28 @@
-const Produkt = require("../models/produkt.model")
+const Model = require("../models/produkt.model")
+const commonController = require('./common.controller.js')
+
 
 
 //Create and Save new item
 
 exports.create = async (req, res) => {
-    if (!req.body.name) {
-        res.status(400).send({ message: "Inhalt kann nicht leer sein."})
-        return
-    }
-
-    const produkt = new Produkt ({
-        name: req.body.name
-    })
-    try {
-        const newProdukt = await produkt.save()
-        .then (data => {
-            res.send(data)
-        })
-    } catch {
-        res.status(500).send({
-            message: 
-                err.message || "Ein Fehler ist passiert beim Anlegen des Eintrages."
-        })
-    }
+    const keyValueObject = req.body 
+    await commonController.create(Model, keyValueObject, res)
 }
 
 
 // Retrieve all from the database 
 exports.findAll = async (req, res) => {
-    try {
-        const value = req.query.name; 
-        let condition = value ? {name: value} : {} //alternative mit regex: //let condition = name ? { name: { $regex: new ReqExp(name), $options: "i"} } : {};
-        const produkte = await Produkt.find(condition)
-        .then (data => {
-            res.send(data)
-        })
-
-    } catch {
-        err => {
-        res.status(500).send({
-            message:
-                err.message || "Ein Fehler ist beim abrufen der Produkte passiert."
-        })
-    }
-    }
+    await commonController.findAll(Model, res);
 }
 
+exports.update = async (req, res) => {
+    const id = req.params.id
+    const DataToUpdate = req.body
+    await commonController.update(id, Model, DataToUpdate, res)
+}
 
-
-// Find a single Produkt with an id
-exports.findOne = (req, res) => {
-
+exports.delete = async (req, res) => { 
+    const id = req.params.id
+    await commonController.delete(id, Model, res)
 }

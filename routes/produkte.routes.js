@@ -1,11 +1,21 @@
+const controller = require('../controllers/produkt.controller.js')
+
+
+// ----------------------------- //
 const express = require('express')
 const router = express.Router() 
-const produkte = require('../controllers/produkt.controller.js')
 
 //Create new item
-router.post('/', produkte.create)
+router.post('/', controller.create)
 
 //Retrieve all
-router.get('/', produkte.findAll)
+router.get('/', controller.findAll)
+
+//update one
+router.put("/:id", controller.update)
+
+//delete one
+router.delete("/:id", controller.delete)
+
 
 module.exports = router

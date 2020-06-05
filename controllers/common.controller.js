@@ -1,9 +1,6 @@
-exports.findAll = async (Model, params, res) => {
+exports.findAll = async (Model, res) => {
         try {
-            const produkt_id = params.produkt_id; 
-            const jahr = params.jahr;
-            let condition = produkt_id || jahr ? {name: produkt_id, jahr: jahr} : {} //alternative mit regex: //let condition = name ? { name: { $regex: new ReqExp(name), $options: "i"} } : {};
-            const data = await Model.find(condition)
+            const data = await Model.find()
             res.send(data)
         } catch {
             err => {
@@ -15,3 +12,60 @@ exports.findAll = async (Model, params, res) => {
         }
 }
 
+exports.create = async (Model, keyValueObject, res) => {
+    if (!keyValueObject) {
+        res.status(400).send({ message: "Inhalt kann nicht leer sein."})
+        return
+    } 
+    
+    try {
+        const model = new Model (keyValueObject)
+        const newEntry = await model.save()
+        .then (data => {
+            res.send(data)
+        })
+    } catch {
+        res.status(500).send({
+            message: 
+                
+            "Ein Fehler ist passiert beim Anlegen des Eintrages."
+        })
+    }
+}
+
+exports.update = async (id, Model, dataToUpdate, res) => {
+    Model.findByIdAndUpdate(id, dataToUpdate, {useFindAndModify: false})
+    .then(data => {
+        if (!data) {
+            res.status(404).send({
+                message: "Ein Fehler ist beim updaten des Eintrages passiert, Eintrag konnte wahrscheinlich nicht gefunden werden."
+            })
+            } else res.send({message: "Eintrag erfolgreich angepasst"})
+        
+    })
+    .catch(err => {
+        res.status(500).send({
+            message: "Ein Fehler ist beim updaten des Eintrages passiert"
+        })
+    })
+}
+
+exports.delete = async (id, Model, res) => {
+    Model.findByIdAndRemove(id)
+        .then(data => {
+            if (!data) {
+                res.status(404).send({
+                    message: "Fehler beim Löschen des Eintrages, eventuell konnte er nicht gefunden werden."
+                })
+            } else {
+                res.send({
+                    message: "Eintrag wurde erfolgreich gelöscht"
+                })
+            }
+        })
+        .catch (err => {
+            res.status(500).send({
+                message: "Eintrag konnte nicht gelöscht werden."
+            })
+        })
+}
