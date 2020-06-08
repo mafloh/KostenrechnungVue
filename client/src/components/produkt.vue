@@ -54,8 +54,10 @@ export default {
         reload () { //so functions schreiben ist shorthand
             //this.jahreskennzahl = this.reloadArray(this.jahreskennzahl)
            
-            
-            let produkte = 'http://localhost:5000/api/produkte'
+        
+        
+
+        let produkte = 'http://localhost:5000/api/produkte'
         let jahreskennzahlen = `http://localhost:5000/api/jahreskennzahlen?jahr=${this.$store.getters.jahr}`
 
         const requestProdukte = axios.get(produkte)
@@ -97,5 +99,10 @@ ul {
     
     align-items: left;
     list-style: none;
+
+    
 }
+
+
+
 </style>

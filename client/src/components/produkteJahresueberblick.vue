@@ -47,20 +47,10 @@ export default {
         }
     },
     mounted () {
-        let produkte = 'http://localhost:5000/api/produkte'
-        let jahreskennzahlen = `http://localhost:5000/api/jahreskennzahlen?`
-
-        const requestProdukte = axios.get(produkte)
-        const requestJahreskennzahlen = axios.get(jahreskennzahlen)
-        
-        axios.all([requestProdukte, requestJahreskennzahlen])
-        .then(axios.spread((...responses) => {
-            this.produktList = responses[0].data
-            this.jahreskennzahlList = responses[1].data
-        }
-        )).catch(error => console.log(error))
-      
-
+        axios
+            .get('http://localhost:5000/api/produkte')
+            .then(response => (this.produktList = response.data))
+            .catch(error => console.log(error))
 /*         .then(response => (this.produktList = response.data))
         .then(response => (this.jahreskennzahlItem = response.data)) */
     },
@@ -103,7 +93,7 @@ ul {
     display:flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    align-items: stretch;
+    align-items: left;
     position:relative;
     vertical-align: top;
     list-style: none;
