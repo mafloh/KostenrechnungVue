@@ -51,12 +51,12 @@ export default {
         }
     },
     methods: {
-        reload: function () {
+        reload () { //so functions schreiben ist shorthand
             //this.jahreskennzahl = this.reloadArray(this.jahreskennzahl)
-            console.log(this.jahreskennzahlList)
+           
             
             let produkte = 'http://localhost:5000/api/produkte'
-        let jahreskennzahlen = `http://localhost:5000/api/jahreskennzahlen?jahr=${this.jahr}`
+        let jahreskennzahlen = `http://localhost:5000/api/jahreskennzahlen?jahr=${this.$store.getters.jahr}`
 
         const requestProdukte = axios.get(produkte)
         const requestJahreskennzahlen = axios.get(jahreskennzahlen)
@@ -65,7 +65,9 @@ export default {
         .then(axios.spread((...responses) => {
             this.produktList = responses[0].data
             this.jahreskennzahlList = responses[1].data
+            console.log(this.jahreskennzahlList)
         }
+        
         )).catch(error => console.log(error))
         }
     },

@@ -1,6 +1,7 @@
-exports.findAll = async (Model, res) => {
+exports.findAll = async (Model, condition, res) => {
         try {
-            const data = await Model.find()
+            
+            const data = await Model.find(condition)
             res.send(data)
         } catch {
             err => {

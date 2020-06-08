@@ -3,6 +3,7 @@
         <div id="inputJahr">
             <input v-model="jahr">
         </div>
+        
     <ul>
         <produkt-item
             v-for="item in produktList"
@@ -76,11 +77,11 @@ export default {
     },
     methods: {
         reload: function () {
-            //this.jahreskennzahl = this.reloadArray(this.jahreskennzahl)
-            console.log(this.jahreskennzahlList)
+        //this.jahreskennzahl = this.reloadArray(this.jahreskennzahl)
             
-            let produkte = 'http://localhost:5000/api/produkte'
-        let jahreskennzahlen = `http://localhost:5000/api/jahreskennzahlen?jahr=${this.jahr}`
+            
+        let produkte = 'http://localhost:5000/api/produkte'
+        let jahreskennzahlen = `http://localhost:5000/api/jahreskennzahlen?jahr=${this.$store.getters.jahr}`
 
         const requestProdukte = axios.get(produkte)
         const requestJahreskennzahlen = axios.get(jahreskennzahlen)

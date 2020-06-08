@@ -13,7 +13,10 @@ exports.create = async (req, res) => {
 
 // Retrieve all from the database 
 exports.findAll = async (req, res) => {
-    await commonController.findAll(Model, res);
+    const value = req.query.jahr
+    console.log(value)
+    const condition = value ? {jahr: value} : {}
+    await commonController.findAll(Model, condition, res);
 }
 
 exports.update = async (req, res) => {
