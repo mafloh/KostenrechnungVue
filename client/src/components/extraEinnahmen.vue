@@ -1,15 +1,21 @@
 <template>
     <div>
+      
+      
       <h2>Extra Einnahmen</h2>
-    <!--<b-table 
-      striped hover 
-      :fields="fields"
-      :sort-by.sync="sortBy"
-      :sort-desc.sync="sortDesc"
-      :items="extraEinnahmenList"
-      >
-    </b-table> -->
-    <b-table-simple>
+
+ 
+
+      <div>
+  <b-button v-b-modal.modal-1>Launch demo modal</b-button>
+
+  <b-modal id="modal-1" title="BootstrapVue">
+    <p class="my-4">Hello from modal!</p>
+  </b-modal>
+</div>
+
+    
+    <b-table-simple striped hover>
       <b-thead>
         <b-tr>
           <b-th v-for="(field, index) in fields" :key="index">{{field.key}}</b-th>
@@ -27,11 +33,15 @@
           <b-th>
             <b-btn variant="danger" @click.prevent="removeItem(data._id)">Delete</b-btn>
           </b-th>
+          <b-th>
+            <b-btn variant="info" @click.prevent="showEditEntry = true">Edit</b-btn>
+          </b-th>
         </b-tr>
         <b-tr>
           <b-th v-for="(field, index) in fields" :key="index">
-            <b-form-datepicker v-if="field.key === 'datumAbgeschlossen'" v-model="newExtraEinnahme[field.key]"></b-form-datepicker>
-            <b-form-input v-else :placeholder="field.key" v-model="newExtraEinnahme[field.key]"></b-form-input>
+            <b-form-input v-if="field.key === 'preis'" v-model="newExtraEinnahme[field.key]" type="number"></b-form-input>
+            <b-form-datepicker v-else-if="field.key === 'datumAbgeschlossen'" v-model="newExtraEinnahme[field.key]"></b-form-datepicker>
+            <b-form-input v-else :placeholder="field.key"  v-model="newExtraEinnahme[field.key]"></b-form-input>
           </b-th>
           <b-th>
             <b-btn variant="success" @click.prevent="submit">Submit</b-btn>
@@ -39,11 +49,14 @@
         </b-tr>
       </b-tbody>
     </b-table-simple>
+    {{ editExtraEinnahmen }}
   </div>
+  
 </template>
 
 <script>
-  import api from '../api.js';
+  import api from '../api.js'
+  //import editExtraEinnahmen from './editExtraEinnahmen.vue'
 
   export default {
     name: 'extraEinnahmen',
@@ -62,7 +75,9 @@
           { key: 'verantwortlich', sortable: true },
         ],
         extraEinnahmenList: null,
-        newExtraEinnahme: {}
+        newExtraEinnahme: {},
+        showEditEntry: false
+        
       }
     },
     methods: {
@@ -70,9 +85,7 @@
         api
           .get('/extraEinnahmen')
           .then(response => (this.extraEinnahmenList = response.data))
-          .catch(error => console.log(error))
-
-          console.log(this.extraEinnahmenList)
+          .catch(error => console.log(error)) 
       },
       async submit() {
         const res = await api.post(`/extraeinnahmen`, this.newExtraEinnahme);
@@ -85,6 +98,9 @@
     },
     mounted () {
       this.reload()
+    },
+    components: {
+      //editExtraEinnahmen
     }
   }
 </script>
