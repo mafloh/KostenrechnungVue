@@ -7,7 +7,7 @@ exports.findAll = async (Model, condition, res) => {
             err => {
             res.status(500).send({
                 message:
-                    err.message || "Ein Fehler ist beim abrufen der Jahreskennzahlen passiert."
+                    err.message || "Ein Fehler ist beim abrufen passiert."
             })
         }
         }
@@ -69,4 +69,18 @@ exports.delete = async (id, Model, res) => {
                 message: "Eintrag konnte nicht gelöscht werden."
             })
         })
+}
+
+exports.findById = async (id, Model, res) => {
+    try {  
+        const data = await Model.findById(id)
+        res.send(data)
+    } catch {
+        err => {
+        res.status(500).send({
+            message:
+                err.message || "Ein Fehler ist beim abrufen passiert."
+        })
+    }
+    }
 }

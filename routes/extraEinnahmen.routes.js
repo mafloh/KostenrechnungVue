@@ -17,5 +17,8 @@ router.put("/:id", controller.update)
 //delete one
 router.delete("/:id", controller.delete)
 
+//Find by Id
+router.get("/ID/:id", controller.findById)
+
 
 module.exports = router

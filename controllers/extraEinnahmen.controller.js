@@ -13,6 +13,7 @@ exports.create = async (req, res) => {
 
 // Retrieve all from the database 
 exports.findAll = async (req, res) => {
+    
     const condition = null
     await commonController.findAll(Model, condition, res);
 }
@@ -26,4 +27,9 @@ exports.update = async (req, res) => {
 exports.delete = async (req, res) => { 
     const id = req.params.id
     await commonController.delete(id, Model, res)
+}
+
+exports.findById = async (req, res) => {
+    const id = req.params.id
+    await commonController.findById(id, Model, res)
 }
