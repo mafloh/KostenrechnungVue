@@ -1,8 +1,6 @@
 <template>
     <div id="produktJahresueberblick">
-        <div id="inputJahr">
-            <input v-model="jahr">
-        </div>
+        
         
     <ul>
         <produkt-item
@@ -12,8 +10,11 @@
         ></produkt-item>
     </ul>
 
-    <hr>
     
+    <div class="inputJahr">
+            <input v-model="jahr"  style="text-align:right">
+    </div>
+    <hr>
     </div>
 
 </template>
@@ -97,10 +98,12 @@ ul {
     position:relative;
     vertical-align: top;
     list-style: none;
+    padding-left: 0;
 }
-#inputJahr {
+.inputJahr {
     margin-bottom: 10px;
-    text-align:left;
+    text-align: right;
+    width: 100%;
     
     
 }

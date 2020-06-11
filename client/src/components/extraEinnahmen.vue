@@ -30,6 +30,7 @@ chore: Regular code maintenance.
             <b-th v-for="(field, index) in fields" :key="index">
               <b-form-input v-if="field.key === 'preis'" v-model="extraEinnahmenItem[field.key]" type="number"></b-form-input>
               <b-form-datepicker v-else-if="field.key === 'datumAbgeschlossen'" v-model="extraEinnahmenItem[field.key]"></b-form-datepicker>
+              <b-form-select v-else-if="field.key === 'produkt'" v-model="bFormSelected" :options="produkteListBFormOptions" ></b-form-select>
               <b-form-input v-else :placeholder="field.key"  v-model="extraEinnahmenItem[field.key]"></b-form-input>
             </b-th>
         </b-tr>
@@ -65,7 +66,8 @@ chore: Regular code maintenance.
         <b-tr>
           <b-th v-for="(field, index) in fields" :key="index">
             <b-form-input v-if="field.key === 'preis'" v-model="newExtraEinnahme[field.key]" type="number"></b-form-input>
-            <b-form-datepicker v-else-if="field.key === 'datumAbgeschlossen'" v-model="newExtraEinnahme[field.key]"></b-form-datepicker>
+            <b-form-datepicker v-else-if="field.key === 'datumAbgeschlossen'" v-model="newExtraEinnahme[field.key]"></b-form-datepicker>        
+            <b-form-select v-else-if="field.key === 'produkt'" v-model="bFormSelected" :options="produkteListBFormOptions" ></b-form-select>
             <b-form-input v-else :placeholder="field.key"  v-model="newExtraEinnahme[field.key]"></b-form-input>
           </b-th>
           <b-th>
@@ -74,14 +76,16 @@ chore: Regular code maintenance.
         </b-tr>
       </b-tbody>
     </b-table-simple>
-    {{ editExtraEinnahmen }}
+    
+
+    {{ calculateExtraEinnahmen }}
   </div>
   
 </template>
 
 <script>
   import api from '../api.js'
-  //import editExtraEinnahmen from './editExtraEinnahmen.vue'
+  
 
   export default {
     name: 'extraEinnahmen',
@@ -103,8 +107,19 @@ chore: Regular code maintenance.
         newExtraEinnahme: {},
         editEntryId: null,
         extraEinnahmenItem: {},
+        bFormSelected: null,
+        produkteList: [],
+        calculateExtraEinnahmen: []
         
       }
+    },
+    computed: {
+      produkteListBFormOptions () {
+          let result = this.produkteList.map(a => a.name)
+          return result
+      }
+      
+      
     },
     methods: {
       reload () {
@@ -112,6 +127,7 @@ chore: Regular code maintenance.
           .get('/extraEinnahmen')
           .then(response => (this.extraEinnahmenList = response.data))
           .catch(error => console.log(error)) 
+
       },
       async submit() {
         const res = await api.post(`/extraeinnahmen`, this.newExtraEinnahme);
@@ -131,13 +147,20 @@ chore: Regular code maintenance.
       async updateItem(id, ItemToUpdate) {
         const res = await api.put(`/extraeinnahmen/${id}`, ItemToUpdate)
         if (res.status === 200) this.reload();
-        console.log(ItemToUpdate)
-        console.log(id)
+        
         
       }
     },
     mounted () {
-      this.reload()
+      this.reload(),
+      api
+          .get('/produkte')
+          .then(response => (this.produkteList = response.data))
+          .catch(error => console.log(error)),
+      api
+          .get('/extraeinnahmen/calculate/')
+          .then(response => (this.calculateExtraEinnahmen = response.data))
+          .catch(error => console.log(error))
     },
     components: {
       //editExtraEinnahmen

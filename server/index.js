@@ -8,6 +8,7 @@ const cors = require("cors")
 const produkteRouter = require('../routes/produkte.routes')
 const jahreskennzahlenRouter = require('../routes/jahreskennzahlen.routes')
 const extraEinnahmenRouter = require('../routes/extraEinnahmen.routes')
+const calculateResults = require('../routes/calculateResults.routes')
 
 const app = express()
 
@@ -42,6 +43,7 @@ const port = process.env.PORT || 5000
 app.use('/api/produkte', produkteRouter)
 app.use('/api/jahreskennzahlen', jahreskennzahlenRouter)
 app.use('/api/extraeinnahmen', extraEinnahmenRouter)
+app.use('/api/calculateResults', calculateResultsRouter)
 
 
 app.listen(port, () => console.log(`Server started on port ${port}`)) 

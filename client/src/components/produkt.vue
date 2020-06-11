@@ -67,7 +67,7 @@ export default {
         .then(axios.spread((...responses) => {
             this.produktList = responses[0].data
             this.jahreskennzahlList = responses[1].data
-            console.log(this.jahreskennzahlList)
+            
         }
         
         )).catch(error => console.log(error))
@@ -95,7 +95,7 @@ export default {
 <style scoped>
 ul {
     color:blue;
-    
+    padding-left: 0;
     
     align-items: left;
     list-style: none;

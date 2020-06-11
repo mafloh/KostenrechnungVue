@@ -78,9 +78,21 @@ exports.findById = async (id, Model, res) => {
     } catch {
         err => {
         res.status(500).send({
-            message:
-                err.message || "Ein Fehler ist beim abrufen passiert."
+            message: err.message || "Ein Fehler ist beim abrufen passiert."
         })
+    }
+    }
+}
+
+exports.findNewest = async (Model, res) => {
+    try {
+        const data = await Model.find().limit(1).sort({$natural:-1})
+        res.send(data)
+    } catch {
+        err => {
+        res.status(500).send({
+            message: err.message || "Ein Fehler ist beim abrufen passiert."
+        })    
     }
     }
 }

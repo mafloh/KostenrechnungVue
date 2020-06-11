@@ -20,5 +20,11 @@ router.delete("/:id", controller.delete)
 //Find by Id
 router.get("/ID/:id", controller.findById)
 
+//Create Calculate Item
+router.post("/calculate/", controller.create)
+
+//Retrieve newest Calculate Item
+router.get("/calculate/", controller.findNewest)
+
 
 module.exports = router

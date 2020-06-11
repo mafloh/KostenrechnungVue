@@ -7,32 +7,47 @@ const jahreskennzahlenSchema = new mongoose.Schema({
     },
     jahr: {
         type: Number,
-        required: true
+        required: true,
+        
     },
     kosten: {
         personal: {
-            type: Number
+            type: Number,
+            default: 0,
+            required: true
         },
         gemeinkosten: {
-            type: Number
+            type: Number,
+            default: 0,
+            required: true
         },
         serverkosten: {
-            type: Number
+            type: Number,
+            default: 0,
+            required: true
         },
         nebenkosten: {
-            type: Number
+            type: Number,
+            default: 0,
+            required: true
         },
         vertrieb: {
-            type: Number
+            type: Number,
+            default: 0,
+            required: true
         }
 
     },
     leistungen: {
         wartungsverträge: {
-            type: Number
+            type: Number,
+            default: 0,
+            required: true
         },
         extraEinnahmen: {
-            type: Number
+            type: Number,
+            default: 0,
+            required: true
         }
     },
     dateAdded: {
