@@ -1,5 +1,6 @@
-const controller = require('../controllers/calculateExtraEinnahmen.controller.js')
-
+const controller = require('../controllers/calculateResults.controller.js')
+const express = require('express')
+const router = express.Router() 
 
 //Create Calculate Item
 router.post("/calculate/", controller.create)

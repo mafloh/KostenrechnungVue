@@ -12,6 +12,10 @@ test: Everything related to testing
 docs: Everything related to documentation
 chore: Regular code maintenance.
 
+<br>
+{{totalExtraEinnahmen}}
+
+
  
 
       <div>
@@ -117,16 +121,50 @@ chore: Regular code maintenance.
       produkteListBFormOptions () {
           let result = this.produkteList.map(a => a.name)
           return result
+      },
+      totalExtraEinnahmen () {
+          if (!this.extraEinnahmenList) {return 0}
+
+          //Formats date of the array of objects to YYYY.
+          let extraEinnahmenListYear = this.extraEinnahmenList.map(obj => {
+            const container = {}
+            container['datumAbgeschlossen'] = new Date(obj['datumAbgeschlossen']).getFullYear()
+            container['preis'] = obj['preis']
+            return container
+            
+          })
+
+          //Takes new array and groups it by year:
+          function groupByYear(objectArray, property) {
+            return objectArray.reduce(function (accumulator, object){
+              let key = object[property]
+              if (!accumulator[key]) {
+                accumulator[key] = []
+              }
+              accumulator[key].push(object['preis'])
+              return accumulator
+            }, {})
+          }
+
+          let groupedByYear = groupByYear(extraEinnahmenListYear, 'datumAbgeschlossen')
+          return groupedByYear
+
+
       }
       
       
     },
     methods: {
       reload () {
+        
         api
           .get('/extraEinnahmen')
-          .then(response => (this.extraEinnahmenList = response.data))
+          .then(response => {
+            (this.extraEinnahmenList = response.data)
+            console.log(this.extraEinnahmenList)
+            })
           .catch(error => console.log(error)) 
+        
 
       },
       async submit() {
@@ -149,7 +187,10 @@ chore: Regular code maintenance.
         if (res.status === 200) this.reload();
         
         
-      }
+      }/* ,
+      async submitCalculateResult(jahr, kostenLeistung, terraWeb, terraSchueler, terraIndividual) {
+        const res = await api.post()
+      } */
     },
     mounted () {
       this.reload(),
@@ -158,9 +199,10 @@ chore: Regular code maintenance.
           .then(response => (this.produkteList = response.data))
           .catch(error => console.log(error)),
       api
-          .get('/extraeinnahmen/calculate/')
+          .get('/calculate/')
           .then(response => (this.calculateExtraEinnahmen = response.data))
           .catch(error => console.log(error))
+      
     },
     components: {
       //editExtraEinnahmen

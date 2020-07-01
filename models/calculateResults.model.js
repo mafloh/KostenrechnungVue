@@ -1,8 +1,11 @@
 const mongoose = require('mongoose')
 
-const extraEinnahmenSchema = new mongoose.Schema({
+const calculateResultsSchema = new mongoose.Schema({
     jahr: {
         type: Number,
+    },
+    KostenLeistung: {
+        type: String
     },
     terraWeb: {
         type: Number,
@@ -16,4 +19,4 @@ const extraEinnahmenSchema = new mongoose.Schema({
 })
 
 
-module.exports = mongoose.model('calculateExtraEinnahmen', calculateExtraEinnahmenSchema)
+module.exports = mongoose.model('calculateResults', calculateResultsSchema)

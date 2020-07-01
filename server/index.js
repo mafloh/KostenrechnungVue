@@ -8,7 +8,7 @@ const cors = require("cors")
 const produkteRouter = require('../routes/produkte.routes')
 const jahreskennzahlenRouter = require('../routes/jahreskennzahlen.routes')
 const extraEinnahmenRouter = require('../routes/extraEinnahmen.routes')
-const calculateResults = require('../routes/calculateResults.routes')
+const calculateResultsRouter = require('../routes/calculateResults.routes')
 
 const app = express()
 
