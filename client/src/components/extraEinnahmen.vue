@@ -35,7 +35,6 @@ chore: Regular code maintenance.
               <b-form-input v-if="field.key === 'preis'" v-model="extraEinnahmenItem[field.key]" type="number"></b-form-input>
               <b-form-datepicker v-else-if="field.key === 'datumAbgeschlossen'" v-model="extraEinnahmenItem[field.key]"></b-form-datepicker>
               <b-form-select v-else-if="field.key === 'produkt'" v-model="extraEinnahmenItem[field.key]" :options="produkteListBFormOptions" ></b-form-select>
-              
               <b-form-input v-else :placeholder="field.key"  v-model="extraEinnahmenItem[field.key]"></b-form-input>
             </b-th>
         </b-tr>
