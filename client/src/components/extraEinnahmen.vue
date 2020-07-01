@@ -34,12 +34,13 @@ chore: Regular code maintenance.
             <b-th v-for="(field, index) in fields" :key="index">
               <b-form-input v-if="field.key === 'preis'" v-model="extraEinnahmenItem[field.key]" type="number"></b-form-input>
               <b-form-datepicker v-else-if="field.key === 'datumAbgeschlossen'" v-model="extraEinnahmenItem[field.key]"></b-form-datepicker>
-              <b-form-select v-else-if="field.key === 'produkt'" v-model="bFormSelected" :options="produkteListBFormOptions" ></b-form-select>
+              <b-form-select v-else-if="field.key === 'produkt'" v-model="extraEinnahmenItem[field.key]" :options="produkteListBFormOptions" ></b-form-select>
+              
               <b-form-input v-else :placeholder="field.key"  v-model="extraEinnahmenItem[field.key]"></b-form-input>
             </b-th>
         </b-tr>
       </b-table-simple>
-      
+ 
     </p>
   </b-modal>
 </div>
@@ -71,7 +72,7 @@ chore: Regular code maintenance.
           <b-th v-for="(field, index) in fields" :key="index">
             <b-form-input v-if="field.key === 'preis'" v-model="newExtraEinnahme[field.key]" type="number"></b-form-input>
             <b-form-datepicker v-else-if="field.key === 'datumAbgeschlossen'" v-model="newExtraEinnahme[field.key]"></b-form-datepicker>        
-            <b-form-select v-else-if="field.key === 'produkt'" v-model="bFormSelected" :options="produkteListBFormOptions" ></b-form-select>
+            <b-form-select v-else-if="field.key === 'produkt'" v-model="newExtraEinnahme[field.key]" :options="produkteListBFormOptions" ></b-form-select>
             <b-form-input v-else :placeholder="field.key"  v-model="newExtraEinnahme[field.key]"></b-form-input>
           </b-th>
           <b-th>
@@ -81,7 +82,7 @@ chore: Regular code maintenance.
       </b-tbody>
     </b-table-simple>
     
-
+     {{bFormSelected}}
     {{ calculateExtraEinnahmen }}
   </div>
   
@@ -111,9 +112,9 @@ chore: Regular code maintenance.
         newExtraEinnahme: {},
         editEntryId: null,
         extraEinnahmenItem: {},
-        bFormSelected: null,
         produkteList: [],
         calculateExtraEinnahmen: []
+        
         
       }
     },
