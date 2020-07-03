@@ -13,7 +13,8 @@ docs: Everything related to documentation
 chore: Regular code maintenance.
 
 <br>
-{{totalExtraEinnahmen}}
+{{ totalExtraEinnahmen }}
+
 
 
  
@@ -81,8 +82,7 @@ chore: Regular code maintenance.
       </b-tbody>
     </b-table-simple>
     
-     {{bFormSelected}}
-    {{ calculateExtraEinnahmen }}
+    
   </div>
   
 </template>
@@ -128,28 +128,57 @@ chore: Regular code maintenance.
           //Formats date of the array of objects to YYYY.
           let extraEinnahmenListYear = this.extraEinnahmenList.map(obj => {
             const container = {}
-            container['datumAbgeschlossen'] = new Date(obj['datumAbgeschlossen']).getFullYear()
+            container['jahr'] = new Date(obj['datumAbgeschlossen']).getFullYear()
             container['preis'] = obj['preis']
+            container['produkt'] = obj['produkt']
             return container
-            
           })
 
-          //Takes new array and groups it by year:
+          //Create an object out of produktList
+          let produkteListNull = {}
+          
+          this.produkteList.map( (item) => {
+            produkteListNull[item.name] = 0
+          })
+          
+          console.log(produkteListNull)
+          
+          /* //Takes new array and groups it by year:
           function groupByYear(objectArray, property) {
             return objectArray.reduce(function (accumulator, object){
               let key = object[property]
+              //let produkt = object['produkt']
               if (!accumulator[key]) {
                 accumulator[key] = []
               }
-              accumulator[key].push(object['preis'])
+              accumulator[key].push({preis: object['preis'], produkt: object['produkt']})
+              
               return accumulator
+              
             }, {})
           }
 
           let groupedByYear = groupByYear(extraEinnahmenListYear, 'datumAbgeschlossen')
-          return groupedByYear
+          return groupedByYear */
 
-
+        //Create Object which sums grouped by year and product
+        let summedByYear = extraEinnahmenListYear.reduce((accumulator, object) => {
+          
+          if (!accumulator.some((item) => item.jahr === object.jahr )) {
+            accumulator.push({ jahr: object.jahr, ...produkteListNull })
+          } 
+          accumulator.forEach((item) => {
+              if (item.jahr === object.jahr /*&& Object.prototype.hasOwnProperty.call(item, object.produkt)*/) {
+                item[object.produkt] = item[object.produkt] + object.preis
+              }
+            })
+          return accumulator
+        }, [])
+          
+        
+        //let summedByYear = sumByYear(extraEinnahmenListYear)
+        console.log(summedByYear)
+        return summedByYear
       }
       
       

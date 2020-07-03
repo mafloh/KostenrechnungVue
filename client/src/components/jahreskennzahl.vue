@@ -2,7 +2,7 @@
    <div>
         <li v-if="name === produkt_id"> <!-- v-if: name und produkt_id(props die mit v-bind(doppelpunkt ist shorthand) vom produkte.vue kommt) -->
         <ul class="kosten"> Personal: {{ jahreskennzahl.kosten.personal }} </ul>
-        <ul class="kosten"> Gemeinkosten: {{ jahreskennzahl.kosten.gemeinskosten }} </ul>
+        <ul class="kosten"> Gemeinkosten: {{ jahreskennzahl.kosten.gemeinkosten }} </ul>
         <ul class="kosten"> Serverkosten: {{ jahreskennzahl.kosten.serverkosten }} </ul>
         <ul class="kosten"> Nebenkosten: {{ jahreskennzahl.kosten.nebenkosten }} </ul>
         <ul class="kosten"> Vertriebskosten: {{ jahreskennzahl.kosten.vertrieb }} </ul>
