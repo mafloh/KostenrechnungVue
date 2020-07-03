@@ -3,10 +3,10 @@ const express = require('express')
 const router = express.Router() 
 
 //Create Calculate Item
-router.post("/calculate/", controller.create)
+router.post('/', controller.create)
 
 //Retrieve newest Calculate Item
-router.get("/calculate/", controller.findNewest)
+router.get('/', controller.findNewest)
 
 
 module.exports = router

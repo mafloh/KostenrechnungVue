@@ -14,6 +14,7 @@ chore: Regular code maintenance.
 
 <br>
 {{ totalExtraEinnahmen }}
+{{ newExtraEinnahme }}
 
 
 
@@ -114,7 +115,6 @@ chore: Regular code maintenance.
         produkteList: [],
         calculateExtraEinnahmen: []
         
-        
       }
     },
     computed: {
@@ -123,44 +123,23 @@ chore: Regular code maintenance.
           return result
       },
       totalExtraEinnahmen () {
-          if (!this.extraEinnahmenList) {return 0}
+        if (!this.extraEinnahmenList) {return 0}
 
-          //Formats date of the array of objects to YYYY.
-          let extraEinnahmenListYear = this.extraEinnahmenList.map(obj => {
-            const container = {}
-            container['jahr'] = new Date(obj['datumAbgeschlossen']).getFullYear()
-            container['preis'] = obj['preis']
-            container['produkt'] = obj['produkt']
-            return container
-          })
+        //Formats date of the array of objects to YYYY.
+        let extraEinnahmenListYear = this.extraEinnahmenList.map(obj => {
+          const container = {}
+          container['jahr'] = new Date(obj['datumAbgeschlossen']).getFullYear()
+          container['preis'] = obj['preis']
+          container['produkt'] = obj['produkt']
+          return container
+        })
 
-          //Create an object out of produktList
-          let produkteListNull = {}
+        //Create an object out of produktList
+        let produkteListNull = {}
+        this.produkteList.map( (item) => {
+          produkteListNull[item.name] = 0
+        })
           
-          this.produkteList.map( (item) => {
-            produkteListNull[item.name] = 0
-          })
-          
-          console.log(produkteListNull)
-          
-          /* //Takes new array and groups it by year:
-          function groupByYear(objectArray, property) {
-            return objectArray.reduce(function (accumulator, object){
-              let key = object[property]
-              //let produkt = object['produkt']
-              if (!accumulator[key]) {
-                accumulator[key] = []
-              }
-              accumulator[key].push({preis: object['preis'], produkt: object['produkt']})
-              
-              return accumulator
-              
-            }, {})
-          }
-
-          let groupedByYear = groupByYear(extraEinnahmenListYear, 'datumAbgeschlossen')
-          return groupedByYear */
-
         //Create Object which sums grouped by year and product
         let summedByYear = extraEinnahmenListYear.reduce((accumulator, object) => {
           
@@ -174,23 +153,19 @@ chore: Regular code maintenance.
             })
           return accumulator
         }, [])
-          
         
-        //let summedByYear = sumByYear(extraEinnahmenListYear)
-        console.log(summedByYear)
         return summedByYear
+        
       }
       
       
     },
     methods: {
       reload () {
-        
         api
           .get('/extraEinnahmen')
           .then(response => {
             (this.extraEinnahmenList = response.data)
-            console.log(this.extraEinnahmenList)
             })
           .catch(error => console.log(error)) 
         
@@ -199,6 +174,7 @@ chore: Regular code maintenance.
       async submit() {
         const res = await api.post(`/extraeinnahmen`, this.newExtraEinnahme);
         if (res.status === 200) this.reload();
+        this.submitCalculateResult()
       },
       async removeItem(id) {
         const res = await api.delete(`/extraeinnahmen/${id}`);
@@ -206,6 +182,7 @@ chore: Regular code maintenance.
           this.reload() 
           alert(`Eintrag mit ID ${id} wurde gelöscht.`);
         }
+        this.submitCalculateResult()
       },
       async loadItem(id) {
         const res = await api.get(`/extraeinnahmen/ID/${id}`)
@@ -214,12 +191,13 @@ chore: Regular code maintenance.
       async updateItem(id, ItemToUpdate) {
         const res = await api.put(`/extraeinnahmen/${id}`, ItemToUpdate)
         if (res.status === 200) this.reload();
+        this.submitCalculateResult()
         
-        
-      }/* ,
-      async submitCalculateResult(jahr, kostenLeistung, terraWeb, terraSchueler, terraIndividual) {
-        const res = await api.post()
-      } */
+      },
+      async submitCalculateResult() {
+        const res = await api.post(`/calculateResults`, this.totalExtraEinnahmen);
+        if (res.status === 200) this.reload();
+      } 
     },
     mounted () {
       this.reload(),
@@ -228,7 +206,7 @@ chore: Regular code maintenance.
           .then(response => (this.produkteList = response.data))
           .catch(error => console.log(error)),
       api
-          .get('/calculate/')
+          .get('/calculateResults')
           .then(response => (this.calculateExtraEinnahmen = response.data))
           .catch(error => console.log(error))
       

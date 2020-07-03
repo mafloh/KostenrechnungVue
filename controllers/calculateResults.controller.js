@@ -1,12 +1,13 @@
-const calculateModel = require("../models/calculateResults.model.js")
+const Model = require("../models/calculateResults.model.js")
 const commonController = require('./common.controller.js')
 
 exports.findNewest = async (req, res) => {
-    const jahr = req.query.jahr
-    const produkt = req.query.produkt
-    const kostenLeistung = req.query.kostenLeistung
-    const condition = {jahr: jahr, produkt: produkt, kostenLeistung: kostenLeistung}
-    await commonController.findNewest(calculateResultsModel, condition, res)
+    const jahrReq = req.query.jahr
+    const jahr = jahrReq ? {jahr: jahrReq} : {}
+    const kostenLeistungReq = req.query.kostenLeistung
+    const kostenLeistung = kostenLeistungReq ? {kostenLeistung: req.query.kostenLeistung} : {}
+    const condition = {...jahr, ...kostenLeistung}
+    await commonController.findNewest(Model, condition, res)
 }
 
 exports.create = async (req, res) => {

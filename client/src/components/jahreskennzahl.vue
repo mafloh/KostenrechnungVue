@@ -14,12 +14,32 @@
 </template>
 
 <script>
+import api from '../api.js'
+
 export default {
     name: 'jahreskennzahlItem',
+    data(){
+        return {
+            calculateResults: null
+        }
+    },
     props: {
         jahreskennzahl: Object,
         name: String,
         produkt_id: String
+    },
+    methods: {
+        reload() {
+            api
+            .get('/calculateResults')
+            .then(response => {
+                (this.calculateResults = response.data)
+            })
+            .catch(error => console.log(error))
+        }
+    },
+    mounted () {
+        this.reload()
     }
 }
 </script>

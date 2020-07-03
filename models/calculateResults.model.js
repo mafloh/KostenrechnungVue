@@ -4,7 +4,7 @@ const calculateResultsSchema = new mongoose.Schema({
     jahr: {
         type: Number,
     },
-    KostenLeistung: {
+    kostenLeistung: {
         type: String
     },
     terraWeb: {
@@ -13,10 +13,12 @@ const calculateResultsSchema = new mongoose.Schema({
     terraIndividual: {
         type: Number,
     },
-    terraSchueler: {
+    terraSchüler: {
         type: Number,
+    },
+    sonstige: {
+        type: Number
     }
 })
-
 
 module.exports = mongoose.model('calculateResults', calculateResultsSchema)
