@@ -10,6 +10,8 @@
         <ul class="leistungen">Extra Einnahmen: {{ jahreskennzahl.leistungen.extraEinnahmen }}</ul>
         
     </li>
+
+    {{ calculateResults}}
     </div>
 </template>
 
@@ -20,7 +22,14 @@ export default {
     name: 'jahreskennzahlItem',
     data(){
         return {
-            calculateResults: null
+            calculateResultsExtraEinnahmen: null
+        }
+    },
+    computed: {
+        jahr: { //hier wird die jahr variable computed, damit es im axios request genutzt werden kann.
+            get () {
+                return this.$store.state.form.jahr
+            }
         }
     },
     props: {
@@ -31,7 +40,7 @@ export default {
     methods: {
         reload() {
             api
-            .get('/calculateResults')
+            .get(`/calculateResults?jahr=${this.$store.getters.jahr}`)
             .then(response => {
                 (this.calculateResults = response.data)
             })

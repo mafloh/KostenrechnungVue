@@ -144,7 +144,7 @@ chore: Regular code maintenance.
         let summedByYear = extraEinnahmenListYear.reduce((accumulator, object) => {
           
           if (!accumulator.some((item) => item.jahr === object.jahr )) {
-            accumulator.push({ jahr: object.jahr, ...produkteListNull })
+            accumulator.push({ jahr: object.jahr, kostenLeistung: 'extraEinnahmen', ...produkteListNull })
           } 
           accumulator.forEach((item) => {
               if (item.jahr === object.jahr /*&& Object.prototype.hasOwnProperty.call(item, object.produkt)*/) {
@@ -195,8 +195,11 @@ chore: Regular code maintenance.
         
       },
       async submitCalculateResult() {
-        const res = await api.post(`/calculateResults`, this.totalExtraEinnahmen);
+        this.totalExtraEinnahmen.forEach( (item) => {
+          const res = api.post(`/calculateResults`, item);
         if (res.status === 200) this.reload();
+        })
+        
       } 
     },
     mounted () {
