@@ -4,8 +4,8 @@ const commonController = require('./common.controller.js')
 exports.findNewest = async (req, res) => {
     const jahrReq = req.query.jahr
     const jahr = jahrReq ? {jahr: jahrReq} : {}
-    const kostenLeistungReq = req.query.kostenLeistung
-    const kostenLeistung = kostenLeistungReq ? {kostenLeistung: req.query.kostenLeistung} : {}
+    const kostenLeistungReq = req.query.kostenleistung
+    const kostenLeistung = kostenLeistungReq ? {kostenLeistung: kostenLeistungReq} : {}
     const condition = {...jahr, ...kostenLeistung}
     await commonController.findNewest(Model, condition, res)
 }

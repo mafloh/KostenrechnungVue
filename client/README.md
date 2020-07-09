@@ -1,3 +1,9 @@
+## Notes
+
+# Issues
+* calculateResult does not wait before writing into DB
+
+
 # kostenrechnung
 
 ## Project setup

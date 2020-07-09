@@ -87,7 +87,7 @@ exports.findById = async (id, Model, res) => {
 exports.findNewest = async (Model, condition, res) => {
     try {
         if (!condition) {condition = null}
-        const data = await Model.find(condition).limit(5).sort({$natural:-1})
+        const data = await Model.find(condition).limit(1).sort({$natural:-1})
         res.send(data)
     } catch {
         err => {

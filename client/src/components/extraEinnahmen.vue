@@ -13,13 +13,6 @@ docs: Everything related to documentation
 chore: Regular code maintenance.
 
 <br>
-{{ totalExtraEinnahmen }}
-{{ newExtraEinnahme }}
-
-
-
- 
-
       <div>
   <!-- <b-button v-b-modal.modal-lg>Launch demo modal</b-button> -->
 
@@ -90,7 +83,6 @@ chore: Regular code maintenance.
 
 <script>
   import api from '../api.js'
-  
 
   export default {
     name: 'extraEinnahmen',
@@ -113,18 +105,62 @@ chore: Regular code maintenance.
         editEntryId: null,
         extraEinnahmenItem: {},
         produkteList: [],
-        calculateExtraEinnahmen: []
-        
       }
     },
     computed: {
       produkteListBFormOptions () {
           let result = this.produkteList.map(a => a.name)
           return result
+      }
+    },
+    methods: {
+      reload () {
+        api
+          .get('/extraEinnahmen')
+          .then(response => {
+            (this.extraEinnahmenList = response.data)
+            })
+          .catch(error => console.log(error)) 
+      },
+      async submit() {
+        const res = await api.post(`/extraeinnahmen`, this.newExtraEinnahme)
+        if (res.status === 200) this.reload()
+        this.submitCalculateResult()
+        
+      },
+      async removeItem(id) {
+        const res = await api.delete(`/extraeinnahmen/${id}`)
+        if (res.status === 200) {
+          this.reload() 
+          alert(`Eintrag mit ID ${id} wurde gelöscht.`)
+          this.submitCalculateResult()
+        }
+        
+      },
+      async loadItem(id) {
+        const res = await api.get(`/extraeinnahmen/ID/${id}`)
+        this.extraEinnahmenItem = res.data
+      },
+      async updateItem(id, ItemToUpdate) {
+        const res = await api.put(`/extraeinnahmen/${id}`, ItemToUpdate)
+        if (res.status === 200) {
+          this.reload()
+        }
+        this.submitCalculateResult()
+        //setTimeout(() => this.submitCalculateResult(), 2000)
+        
+        
+      },
+      submitCalculateResult() {
+        const total =  this.totalExtraEinnahmen ()
+        total.forEach( (item) => {
+          const res = api.post(`/calculateResults`, item);
+        if (res.status === 200) this.reload();
+        })
       },
       totalExtraEinnahmen () {
         if (!this.extraEinnahmenList) {return 0}
-
+        this.reload()
         //Formats date of the array of objects to YYYY.
         let extraEinnahmenListYear = this.extraEinnahmenList.map(obj => {
           const container = {}
@@ -153,53 +189,8 @@ chore: Regular code maintenance.
             })
           return accumulator
         }, [])
-        
         return summedByYear
-        
-      }
-      
-      
-    },
-    methods: {
-      reload () {
-        api
-          .get('/extraEinnahmen')
-          .then(response => {
-            (this.extraEinnahmenList = response.data)
-            })
-          .catch(error => console.log(error)) 
-        
-
-      },
-      async submit() {
-        const res = await api.post(`/extraeinnahmen`, this.newExtraEinnahme);
-        if (res.status === 200) this.reload();
-        this.submitCalculateResult()
-      },
-      async removeItem(id) {
-        const res = await api.delete(`/extraeinnahmen/${id}`);
-        if (res.status === 200) {
-          this.reload() 
-          alert(`Eintrag mit ID ${id} wurde gelöscht.`);
-        }
-        this.submitCalculateResult()
-      },
-      async loadItem(id) {
-        const res = await api.get(`/extraeinnahmen/ID/${id}`)
-        this.extraEinnahmenItem = res.data
-      },
-      async updateItem(id, ItemToUpdate) {
-        const res = await api.put(`/extraeinnahmen/${id}`, ItemToUpdate)
-        if (res.status === 200) this.reload();
-        this.submitCalculateResult()
-        
-      },
-      async submitCalculateResult() {
-        this.totalExtraEinnahmen.forEach( (item) => {
-          const res = api.post(`/calculateResults`, item);
-        if (res.status === 200) this.reload();
-        })
-        
+        Promise.resolve('Success') //necessary??
       } 
     },
     mounted () {
@@ -207,12 +198,7 @@ chore: Regular code maintenance.
       api
           .get('/produkte')
           .then(response => (this.produkteList = response.data))
-          .catch(error => console.log(error)),
-      api
-          .get('/calculateResults')
-          .then(response => (this.calculateExtraEinnahmen = response.data))
           .catch(error => console.log(error))
-      
     },
     components: {
       //editExtraEinnahmen

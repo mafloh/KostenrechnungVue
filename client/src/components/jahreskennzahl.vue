@@ -1,17 +1,25 @@
 <template>
    <div>
-        <li v-if="name === produkt_id"> <!-- v-if: name und produkt_id(props die mit v-bind(doppelpunkt ist shorthand) vom produkte.vue kommt) -->
-        <ul class="kosten"> Personal: {{ jahreskennzahl.kosten.personal }} </ul>
-        <ul class="kosten"> Gemeinkosten: {{ jahreskennzahl.kosten.gemeinkosten }} </ul>
-        <ul class="kosten"> Serverkosten: {{ jahreskennzahl.kosten.serverkosten }} </ul>
-        <ul class="kosten"> Nebenkosten: {{ jahreskennzahl.kosten.nebenkosten }} </ul>
-        <ul class="kosten"> Vertriebskosten: {{ jahreskennzahl.kosten.vertrieb }} </ul>
-        <ul class="leistungen">Wartungsverträge: {{ jahreskennzahl.leistungen.wartungsverträge }}</ul>
-        <ul class="leistungen">Extra Einnahmen: {{ jahreskennzahl.leistungen.extraEinnahmen }}</ul>
+      
+        <li> <!-- <li v-if="name === produkt_id"> --> <!-- v-if: name und produkt_id(props die mit v-bind(doppelpunkt ist shorthand) vom produkte.vue kommt) -->
+        <ul class="kosten"> Personal:  </ul>
+        <ul class="kosten"> Gemeinkosten:  </ul>
+        <ul class="kosten"> Serverkosten:  </ul>
+        <ul class="kosten"> Nebenkosten:  </ul>
+        <ul class="kosten"> Vertriebskosten:  </ul>
+        <ul class="leistungen">Wartungsverträge: </ul>
+        <ul class="leistungen">Extra Einnahmen: {{ filterByProdukt(extraEinnahmenResults) }}</ul>
         
     </li>
+        <!-- <span
+        v-for="value in filterByProdukt(extraEinnahmenResults)"
+        :key="value._id"
+        
+        
+        >{{ value }}</span> -->
 
-    {{ calculateResults}}
+ 
+    
     </div>
 </template>
 
@@ -22,7 +30,9 @@ export default {
     name: 'jahreskennzahlItem',
     data(){
         return {
-            calculateResultsExtraEinnahmen: null
+            //calculateResults: null
+            //extraEinnahmenResultsProdukt: null
+            loadingExtraEinnahmen: false
         }
     },
     computed: {
@@ -31,24 +41,42 @@ export default {
                 return this.$store.state.form.jahr
             }
         }
+        
+        /* ,
+        extraEinnahmenResultsProdukt:  function () {
+            const extra = this.extraEinnahmenResults ? this.extraEinnahmenResults.jahr : {}
+            return extra
+        } */
+        
+        /* ,
+        filterByProdukt() {
+            
+            //let filteredObject = {}
+            const produktFilter = this.name
+            let extraEinnahmenResultsFiltered = this.extraEinnahmenResults
+            return this.extraEinnahmenResultsFiltered//.produktFilter
+            //return filteredObject
+        } */
     },
     props: {
-        jahreskennzahl: Object,
         name: String,
-        produkt_id: String
+        extraEinnahmenResults: Object
     },
     methods: {
         reload() {
-            api
-            .get(`/calculateResults?jahr=${this.$store.getters.jahr}`)
-            .then(response => {
-                (this.calculateResults = response.data)
-            })
-            .catch(error => console.log(error))
+          //console.log(this.extraEinnahmenResults)
+        },
+        filterByProdukt(object) {
+            const nameProdukt= this.name
+            console.log(nameProdukt)
+            if (object) console.log(object[nameProdukt])
+            if (object) {return object[nameProdukt]}
         }
     },
     mounted () {
         this.reload()
+       // console.log(this.name)
+        
     }
 }
 </script>
