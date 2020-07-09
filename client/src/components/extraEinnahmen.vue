@@ -114,25 +114,26 @@ chore: Regular code maintenance.
       }
     },
     methods: {
-      reload () {
-        api
-          .get('/extraEinnahmen')
-          .then(response => {
-            (this.extraEinnahmenList = response.data)
-            })
-          .catch(error => console.log(error)) 
+      async reload () {
+        try {
+          const response = await api
+            .get('/extraEinnahmen')
+          this.extraEinnahmenList = response.data
+        } catch(err) {
+          console.log(err)
+        }
       },
       async submit() {
         const res = await api.post(`/extraeinnahmen`, this.newExtraEinnahme)
-        if (res.status === 200) this.reload()
+        if (res.status === 200) await this.reload()
         this.submitCalculateResult()
         
       },
       async removeItem(id) {
         const res = await api.delete(`/extraeinnahmen/${id}`)
         if (res.status === 200) {
-          this.reload() 
           alert(`Eintrag mit ID ${id} wurde gelöscht.`)
+          await this.reload() 
           this.submitCalculateResult()
         }
         
@@ -144,23 +145,24 @@ chore: Regular code maintenance.
       async updateItem(id, ItemToUpdate) {
         const res = await api.put(`/extraeinnahmen/${id}`, ItemToUpdate)
         if (res.status === 200) {
-          this.reload()
+          await this.reload()
+          this.submitCalculateResult()
         }
-        this.submitCalculateResult()
+        //this.submitCalculateResult()
         //setTimeout(() => this.submitCalculateResult(), 2000)
         
         
       },
       submitCalculateResult() {
         const total =  this.totalExtraEinnahmen ()
-        total.forEach( (item) => {
+        total.forEach(async (item) => {
           const res = api.post(`/calculateResults`, item);
-        if (res.status === 200) this.reload();
+          if (res.status === 200) await this.reload();
         })
       },
       totalExtraEinnahmen () {
         if (!this.extraEinnahmenList) {return 0}
-        this.reload()
+        
         //Formats date of the array of objects to YYYY.
         let extraEinnahmenListYear = this.extraEinnahmenList.map(obj => {
           const container = {}
@@ -190,11 +192,11 @@ chore: Regular code maintenance.
           return accumulator
         }, [])
         return summedByYear
-        Promise.resolve('Success') //necessary??
+        //Promise.resolve('Success') //necessary??
       } 
     },
-    mounted () {
-      this.reload(),
+    async mounted () {
+      await this.reload(),
       api
           .get('/produkte')
           .then(response => (this.produkteList = response.data))
