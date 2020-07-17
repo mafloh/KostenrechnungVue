@@ -1,6 +1,6 @@
 <template>
-  <div id="produktJahresueberblick">
-    <ul>
+  <div id="produktJahresueberblick" :key="produktekeyforcereload" >
+    <ul v-on:updateprodukte="produktekeyforcereload++"> 
       <produkt-item
         v-for="item in produktList"
         v-bind:produkt="item"
@@ -54,6 +54,7 @@ export default {
       extraEinnahmenResultsApi: null,
       jahrCurrent: new Date().getFullYear(),
       timeoutId: null, //fürs debouncing bei der eingabe des jahres
+      produktekeyforcereload: 0
     };
   },
   mounted() {
@@ -113,6 +114,9 @@ export default {
           })
         )
         .catch(error => console.log(error));
+    },
+    test() {
+      console.log("updateprodukte")
     }
   }
 };

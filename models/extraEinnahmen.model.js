@@ -2,12 +2,10 @@ const mongoose = require('mongoose')
 
 const extraEinnahmenSchema = new mongoose.Schema({
     kunde: {
-        type: String,
-        required: true
+        type: String
     },
     beschreibung: {
-        type: String,
-        required: true
+        type: String
     },
     idLexware: {
         type: Number

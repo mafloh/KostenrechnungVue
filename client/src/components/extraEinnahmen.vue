@@ -16,7 +16,7 @@ chore: Regular code maintenance.
       <div>
   <!-- <b-button v-b-modal.modal-lg>Launch demo modal</b-button> -->
 
-  <b-modal id="modal-lg" size="lg" title="BootstrapVue" aria-hidden="false" @ok="updateItem(extraEinnahmenItem._id, extraEinnahmenItem)">
+  <b-modal id="modal-lg" size="xl" title="BootstrapVue" aria-hidden="false" @ok="updateItem(extraEinnahmenItem._id, extraEinnahmenItem)">
   
     <p class="my-4">
       <b-table-simple>
@@ -40,40 +40,48 @@ chore: Regular code maintenance.
 </div>
 
     
-    <b-table-simple striped hover>
+    <b-table-simple striped hover >
       <b-thead>
         <b-tr>
           <b-th v-for="(field, index) in fields" :key="index">{{field.key}}</b-th>
-          <b-th>Actions</b-th>
+          <b-th></b-th>
         </b-tr>
       </b-thead>
+
       <b-tbody>
         <b-tr v-for="(data, index) in extraEinnahmenList" :key="index">
+
           <b-th v-for="(field, index) in fields" :key="index">
             <span v-if="data[field.key] && field.key === 'datumAbgeschlossen'">
               {{ new Date(data[field.key]).toLocaleDateString() }}
             </span>
             <span v-else>{{data[field.key]}}</span>
           </b-th>
+
           <b-th>
             <b-btn variant="danger" @click.prevent="removeItem(data._id)">Delete</b-btn>
           </b-th>
+
           <b-th>
             <b-btn v-b-modal.modal-lg variant="info" :key="index" @click.prevent="loadItem(data._id)">Edit</b-btn>
           </b-th>
         </b-tr>
+
         <b-tr>
           <b-th v-for="(field, index) in fields" :key="index">
-            <b-form-input v-if="field.key === 'preis'" v-model="newExtraEinnahme[field.key]" type="number"></b-form-input>
+            <b-form-input v-if="field.key === 'preis'" v-model="newExtraEinnahme[field.key]" type="number" @click="submitCalculateResult"></b-form-input>
             <b-form-datepicker v-else-if="field.key === 'datumAbgeschlossen'" v-model="newExtraEinnahme[field.key]"></b-form-datepicker>        
             <b-form-select v-else-if="field.key === 'produkt'" v-model="newExtraEinnahme[field.key]" :options="produkteListBFormOptions" ></b-form-select>
             <b-form-input v-else :placeholder="field.key"  v-model="newExtraEinnahme[field.key]"></b-form-input>
           </b-th>
+
           <b-th>
             <b-btn variant="success" @click.prevent="submit">Submit</b-btn>
           </b-th>
         </b-tr>
+
       </b-tbody>
+
     </b-table-simple>
     
     
@@ -159,6 +167,8 @@ chore: Regular code maintenance.
           const res = api.post(`/calculateResults`, item);
           if (res.status === 200) await this.reload();
         })
+        this.$emit('updateprodukte')
+        console.log("updateprodukte")
       },
       totalExtraEinnahmen () {
         if (!this.extraEinnahmenList) {return 0}
@@ -172,20 +182,20 @@ chore: Regular code maintenance.
           return container
         })
 
-        //Create an object out of produktList
+        //Create an object out of produktList. This object will be attached in reduce function in accumulator. this way there is never undefined in for the product price in the reduce function.
         let produkteListNull = {}
         this.produkteList.map( (item) => {
           produkteListNull[item.name] = 0
         })
           
         //Create Object which sums grouped by year and product
-        let summedByYear = extraEinnahmenListYear.reduce((accumulator, object) => {
+        let summedByYear = extraEinnahmenListYear.reduce((accumulator, object) => { 
           
-          if (!accumulator.some((item) => item.jahr === object.jahr )) {
-            accumulator.push({ jahr: object.jahr, kostenLeistung: 'extraEinnahmen', ...produkteListNull })
-          } 
-          accumulator.forEach((item) => {
-              if (item.jahr === object.jahr /*&& Object.prototype.hasOwnProperty.call(item, object.produkt)*/) {
+          if (!accumulator.some((item) => item.jahr === object.jahr )) { //if there is no property in the accumulator which is the same as the year property of the object
+            accumulator.push({ jahr: object.jahr, kostenLeistung: 'extraEinnahmen', ...produkteListNull }) //then it will add another object in the accumulator array with year and all products. all producs have price = 0 as default.
+         } 
+          accumulator.forEach((item) => { //goes through accumulator and will add the price to the correct product.
+              if (item.jahr === object.jahr ) {
                 item[object.produkt] = item[object.produkt] + object.preis
               }
             })

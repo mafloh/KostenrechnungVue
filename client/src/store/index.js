@@ -7,7 +7,8 @@ export default new Vuex.Store ({
     strict: true,
     
     state: {
-       form: {jahr: null}
+       form: {jahr: null},
+       produktKeyForceReload: 0
     },
     mutations: {
         updateJahr (state, value) {
