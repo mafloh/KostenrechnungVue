@@ -68,8 +68,6 @@ export default {
         },
         filterByProdukt(object) {
             const nameProdukt= this.name
-            console.log(nameProdukt)
-            if (object) console.log(object[nameProdukt])
             if (object) {return object[nameProdukt]}
         }
     },

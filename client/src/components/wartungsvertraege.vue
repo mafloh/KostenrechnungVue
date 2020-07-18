@@ -123,7 +123,6 @@
             </b-tr>
         </b-tbody>
     </b-table-simple>
-
     </div>
 
     
@@ -155,7 +154,8 @@ export default {
             wartungsvertraegeList: null,
             newWartungsvertrag : {},
             produkteList: [],
-            wartungsvertraegeItem: {}
+            wartungsvertraegeItem: {},
+            index: 0
         }
     },
     computed: {
@@ -164,6 +164,9 @@ export default {
           return result
       },
       fieldsTerraSchueler () {
+          if ( this.fields === null ) {
+              return null
+          }
           let result = this.fields.filter( item => {
               if (item.produkt === 'allgemein' || item.produkt === 'terraSchueler') {
                   return true
@@ -171,6 +174,9 @@ export default {
           return result
       },
       fieldsTerraIndividual () {
+          if ( this.fields === null ) {
+              return null
+          }
           let result = this.fields.filter( item => {
               if (item.produkt === 'allgemein' || item.produkt === 'terraIndividual') {
                   return true
@@ -178,6 +184,9 @@ export default {
           return result
       },
       fieldsTerraWeb () {
+          if ( this.fields === null ) {
+              return null
+          }
           let result = this.fields.filter( item => {
               if (item.produkt === 'allgemein' || item.produkt === 'terraWeb') {
                   return true
@@ -185,14 +194,23 @@ export default {
           return result
       },
       wartungsvertraegeListTerraSchueler () {
+          if ( this.wartungsvertraegeList === null ) {
+              return null
+          }
           let result = this.wartungsvertraegeList.filter( item => item.produkt === 'terraSchüler')
           return result
       },
       wartungsvertraegeListTerraIndividual () {
+          if ( this.wartungsvertraegeList === null ) {
+              return null
+          }
           let result = this.wartungsvertraegeList.filter( item => item.produkt === 'terraIndividual')
           return result
       },
       wartungsvertraegeListTerraWeb () {
+          if ( this.wartungsvertraegeList === null ) {
+              return null
+          }
           let result = this.wartungsvertraegeList.filter( item => item.produkt === 'terraWeb')
           return result
       }
@@ -210,25 +228,20 @@ export default {
         async submit() {
             const res = await api.post(`/wartungsvertraege`, this.newWartungsvertrag)
             if (res.status === 200) await this.reload()
+            
         },
         async updateItem(id, itemToUpdate) {
             const res = await api.put(`/wartungsvertraege/${id}`, itemToUpdate)
             if (res.status === 200) {
                 await this.reload()
             }
+            this.totalWartungsvertraege ()
         },
       async loadItem(id) {
         const res = await api.get(`/wartungsvertraege/ID/${id}`)
         this.wartungsvertraegeItem = res.data
-      }
-    },
-    async mounted () {
-       await this.reload (),
-       api
-          .get('/produkte')
-          .then(response => (this.produkteList = response.data))
-          .catch(error => console.log(error))
-    },
+        this.totalWartungsvertraege()
+      },
       totalWartungsvertraege () {
         if (!this.wartungsvertraegeList) {return 0}
         
@@ -237,11 +250,12 @@ export default {
           const container = {}
           container['jahr'] = new Date(obj['start']).getFullYear()
           container['monat'] = new Date(obj['start']).getMonth()
-          container['proMonat'] = obj['proMonat']
-          container['einmaligeZahlung'] = obj['einmaligeZahlung']
-          container['jahreswartung'] = obj['jahreswartung']
+          container['proMonat'] = obj['proMonat'] ? obj['proMonat'] : 0
+          container['einmaligeZahlung'] = obj['einmaligeZahlung'] ? obj['einmaligeZahlung'] : 0
+          container['jahreswartung'] = obj['jahreswartung'] ? obj['jahreswartung'] : 0
           container['fixOderGeplant'] = obj['fixOderGeplant']
           container['produkt'] = obj['produkt']
+          container['individualStrassendatenProMonat'] = obj['individualStrassendatenProMonat'] ? obj['individualStrassendatenProMonat'] : 0
           return container
         })
 
@@ -250,22 +264,46 @@ export default {
         this.produkteList.map( (item) => {
           produkteListNull[item.name] = 0
         })
-          
+
         //Create Object which sums grouped by year and product
+        const currentYear = new Date().getFullYear() //current year for using in reduce
+        
         let summedByYear = wartungsvertraegeListYear.reduce((accumulator, object) => {
+            if (object.fixOderGeplant === 'fix') {
+                let i = 0
+                for ( i=object.jahr; i <= currentYear; i++) {
+                
+                    if (!accumulator.some((item) => item.jahr === i )) {
+                        accumulator.push({ jahr: i, kostenLeistung: 'wartungsvertraege', ...produkteListNull })
+                }} 
+
+                accumulator.forEach((item) => {
+                        if (item.jahr === object.jahr ) {
+                            item[object.produkt] = item[object.produkt] +  (12 - object.monat) * (object.proMonat + object.individualStrassendatenProMonat) + object.jahreswartung + object.einmaligeZahlung
+                        } if (item.jahr > object.jahr) {
+                            item[object.produkt] = item [object.produkt] + 12 * (object.proMonat + object.individualStrassendatenProMonat) + object.jahreswartung
+                        }
+                    }) 
+                return accumulator
           
-          if (!accumulator.some((item) => item.jahr === object.jahr )) {
-            accumulator.push({ jahr: object.jahr, kostenLeistung: 'extraEinnahmen', ...produkteListNull })
-          } 
-          accumulator.forEach((item) => {
-              if (item.jahr === object.jahr /*&& Object.prototype.hasOwnProperty.call(item, object.produkt)*/) {
-                item[object.produkt] = item[object.produkt] + object.preis
-              }
-            })
-          return accumulator
-        }, [])
+        } else {
+                return accumulator
+        }}, [])
+        console.log(summedByYear)
         return summedByYear
+        
         //Promise.resolve('Success') //necessary??
       } 
+    },
+    async mounted () {
+       await this.reload (),
+       api
+          .get('/produkte')
+          .then(response => (this.produkteList = response.data))
+          .catch(error => console.log(error))
+       
+      
+
+    }
 }
 </script>
