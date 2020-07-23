@@ -168,7 +168,7 @@ chore: Regular code maintenance.
           if (res.status === 200) await this.reload();
         })
         this.$emit('updateprodukte')
-        console.log("updateprodukte")
+        //console.log("updateprodukte")
       },
       totalExtraEinnahmen () {
         if (!this.extraEinnahmenList) {return 0}

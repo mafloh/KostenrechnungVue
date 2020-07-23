@@ -1,14 +1,14 @@
 <template>
    <div>
       
-        <li> <!-- <li v-if="name === produkt_id"> --> <!-- v-if: name und produkt_id(props die mit v-bind(doppelpunkt ist shorthand) vom produkte.vue kommt) -->
+        <li v-if="calculateResults"> <!-- <li v-if="name === produkt_id"> --> <!-- v-if: name und produkt_id(props die mit v-bind(doppelpunkt ist shorthand) vom produkte.vue kommt) -->
         <ul class="kosten"> Personal:  </ul>
         <ul class="kosten"> Gemeinkosten:  </ul>
         <ul class="kosten"> Serverkosten:  </ul>
         <ul class="kosten"> Nebenkosten:  </ul>
         <ul class="kosten"> Vertriebskosten:  </ul>
-        <ul class="leistungen">Wartungsverträge: </ul>
-        <ul class="leistungen">Extra Einnahmen: {{ filterByProdukt(extraEinnahmenResults) }}</ul>
+        <ul class="leistungen">Wartungsverträge: {{ calculateResults.wartungsvertraege[0][name] }}</ul>
+        <ul class="leistungen"  >Extra Einnahmen: {{ calculateResults.extraEinnahmen[0][name] }}</ul>
         
     </li>
         <!-- <span
@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import api from '../api.js'
+//import api from '../api.js'
 
 export default {
     name: 'jahreskennzahlItem',
@@ -32,7 +32,7 @@ export default {
         return {
             //calculateResults: null
             //extraEinnahmenResultsProdukt: null
-            loadingExtraEinnahmen: false
+            loadingExtraEinnahmen: false,
         }
     },
     computed: {
@@ -60,15 +60,11 @@ export default {
     },
     props: {
         name: String,
-        extraEinnahmenResults: Object
+        calculateResults: Object
     },
     methods: {
         reload() {
-          //console.log(this.extraEinnahmenResults)
-        },
-        filterByProdukt(object) {
-            const nameProdukt= this.name
-            if (object) {return object[nameProdukt]}
+          //console.log(this.calculateResults)
         }
     },
     mounted () {

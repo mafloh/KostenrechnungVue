@@ -123,6 +123,69 @@
             </b-tr>
         </b-tbody>
     </b-table-simple>
+
+    <h2>Wartungsverträge Terra Web</h2>
+
+    <b-modal id="wartungsvertraege-terra-web" size="xl" title="BootstrapVue" aria-hidden="false" @ok="updateItem(wartungsvertraegeItem._id, wartungsvertraegeItem)">
+ 
+    <p class="my-4">
+      <b-table-simple>
+        <b-tr>
+          <b-th v-for="(field, index) in fieldsTerraWeb" :key="index">
+              {{field.key}}
+          </b-th>
+        </b-tr>
+        <b-tr>
+            <b-th v-for="(field, index) in fieldsTerraWeb" :key="index">
+              <b-form-input v-if="field.key === 'preis'" v-model="wartungsvertraegeItem[field.key]" type="number"></b-form-input>
+              <b-form-datepicker v-else-if="field.key === 'datumAbgeschlossen'" v-model="wartungsvertraegeItem[field.key]"></b-form-datepicker>
+              <b-form-select v-else-if="field.key === 'produkt'" v-model="wartungsvertraegeItem[field.key]" :options="produkteListBFormOptions" ></b-form-select>
+              <b-form-input v-else :placeholder="field.key"  v-model="wartungsvertraegeItem[field.key]"></b-form-input>
+            </b-th>
+        </b-tr>
+      </b-table-simple>
+ 
+    </p>
+  </b-modal>
+   
+    <b-table-simple striped hover>
+        <b-thead>
+            <b-tr>
+                <b-th v-for="(field, index) in fieldsTerraWeb" :key="index">{{field.key}}</b-th>
+                <b-th></b-th>
+            </b-tr>
+        </b-thead>
+        <b-tbody>
+            <b-tr v-for="item in wartungsvertraegeListTerraWeb" :key="item._id">
+
+                <b-th v-for="(field, index) in fieldsTerraWeb" :key="index">
+                    <span v-if="item[field.key] && field.key === 'start'">
+                    {{ new Date(item[field.key]).toLocaleDateString() }}
+                     </span>
+                    <span v-else>{{item[field.key]}}</span>
+                </b-th>
+
+                <b-th>
+                    <b-btn v-b-modal.wartungsvertraege-terra-web variant="info" :key="index" @click.prevent="loadItem(item._id)">Edit</b-btn>
+                </b-th>
+
+            </b-tr>
+
+            <b-tr>
+                <b-th v-for="(field, index) in fieldsTerraWeb" :key="index">
+                    <b-form-datepicker v-if="field.key === 'start'" v-model="newWartungsvertrag[field.key]"></b-form-datepicker>
+                    <b-form-select v-else-if="field.key === 'fixOderGeplant'" v-model="newWartungsvertrag[field.key]" :options="['fix', 'geplant']"></b-form-select>
+                    <b-form-select v-else-if="field.key === 'produkt'" v-model="newWartungsvertrag[field.key]" :options="produkteListBFormOptions" ></b-form-select>
+                    <b-form-input v-else :placeholder="field.key" v-model="newWartungsvertrag[field.key]"></b-form-input>
+                </b-th>
+
+                <b-th>
+                    <b-btn variant="success" @click.prevent="submit">Submit</b-btn>
+                </b-th>
+            </b-tr>
+        </b-tbody>
+    </b-table-simple>
+
     </div>
 
     
@@ -228,6 +291,7 @@ export default {
         async submit() {
             const res = await api.post(`/wartungsvertraege`, this.newWartungsvertrag)
             if (res.status === 200) await this.reload()
+            this.submitCalculateResult()
             
         },
         async updateItem(id, itemToUpdate) {
@@ -235,12 +299,20 @@ export default {
             if (res.status === 200) {
                 await this.reload()
             }
-            this.totalWartungsvertraege ()
+            this.submitCalculateResult()
         },
       async loadItem(id) {
         const res = await api.get(`/wartungsvertraege/ID/${id}`)
         this.wartungsvertraegeItem = res.data
-        this.totalWartungsvertraege()
+      },
+      submitCalculateResult() {
+        const total =  this.totalWartungsvertraege ()
+        total.forEach(async (item) => {
+          const res = api.post(`/calculateResults`, item);
+          if (res.status === 200) await this.reload();
+        })
+        this.$emit('updateprodukte')
+        //console.log("updateprodukte")
       },
       totalWartungsvertraege () {
         if (!this.wartungsvertraegeList) {return 0}
@@ -289,7 +361,7 @@ export default {
         } else {
                 return accumulator
         }}, [])
-        console.log(summedByYear)
+        //console.log(summedByYear)
         return summedByYear
         
         //Promise.resolve('Success') //necessary??
@@ -307,3 +379,7 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+
+</style>

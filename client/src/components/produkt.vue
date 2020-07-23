@@ -7,7 +7,7 @@
         
         <jahreskennzahlItem 
             v-bind:name="produkt.name"
-            v-bind:extra-einnahmen-results="extraEinnahmenResults"
+            v-bind:calculate-results="calculateResults"
             ></jahreskennzahlItem>
         
     </li> 
@@ -18,7 +18,7 @@
 <script>
 import jahreskennzahlItem from './jahreskennzahl.vue'
 import axios from 'axios'
-import {store} from "../store/index.js";
+//import {store} from "../store/index.js";
 
 
 
@@ -28,8 +28,7 @@ export default {
     name: 'produktItem',
     props: {
         produkt: Object,
-        extraEinnahmenResults: Object
-        
+        calculateResults: Object,
     },
     data () {
         return {
@@ -51,15 +50,15 @@ export default {
         
 
         let produkte = 'http://localhost:5000/api/produkte'
-        let calculateResults = `http://localhost:5000/api/calculateResults?jahr=${this.$store.getters.jahr}`
+        //let calculateResults = `ÖÖÖhttp://localhost:5000/api/calculateResults?jahr=${this.$store.getters.jahr}`
 
         const requestProdukte = axios.get(produkte)
-        const requestCalculateResults = axios.get(calculateResults)
+        //const requestCalculateResults = axios.get(calculateResults)
         
-        axios.all([requestProdukte, requestCalculateResults])
+        axios.all([requestProdukte])
         .then(axios.spread((...responses) => {
             this.produktList = responses[0].data
-            this.calculateResults = responses[1].data
+            //this.calculateResults = responses[1].data
             
             
         }

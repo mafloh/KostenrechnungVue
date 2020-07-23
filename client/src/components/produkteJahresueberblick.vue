@@ -5,7 +5,7 @@
         v-for="item in produktList"
         v-bind:produkt="item"
         v-bind:key="item._id"
-        :extra-einnahmen-results="extraEinnahmenResultsApi"
+        :calculate-results="calculateResultsApi"
       ></produkt-item>
     </ul>
 
@@ -17,10 +17,10 @@
 </template>
 
 <script>
-import produktItem from "./produkt.vue";
-import jahreskennzahlItem from "./jahreskennzahl.vue";
+import produktItem from "./produkt.vue"
+//import jahreskennzahlItem from "./jahreskennzahl.vue";
 import axios from "axios";
-import api from "../api.js";
+//import api from "../api.js";
 //import {store} from '../store/index.js'
 
 export default {
@@ -42,7 +42,7 @@ export default {
   },
   components: {
     produktItem,
-    jahreskennzahlItem
+    //jahreskennzahlItem
   },
   beforeDestroy() {
     this.unwatch(); // anscheinend ist unwatch wichtig bei watch, damit der watcher gestopped wird https://dev.to/viniciuskneves/watch-for-vuex-state-changes-2mgj
@@ -51,7 +51,7 @@ export default {
   data() {
     return {
       produktList: null, //Eine Variable wird angelegt, damit axios etwas in die variable schreiben kann und es mit v-for angezeigt werden kann.
-      extraEinnahmenResultsApi: null,
+      calculateResultsApi: null,
       jahrCurrent: new Date().getFullYear(),
       timeoutId: null, //fürs debouncing bei der eingabe des jahres
       produktekeyforcereload: 0
@@ -84,22 +84,53 @@ export default {
   methods: {
     reload: function() {
       //load extraEinnahmenResults
-      const nr = jahr;
-      const jahr = "jahr";
-      let jahrX = this.$store.state.form;
-      let jahrY = this.$store.getters;
-      console.log(this.jahr, this.$store.getters.jahr);
-      api
-        .get(`/calculateResults?jahr=${this.$store.getters.jahr}`) //?jahr=${this.jahr}&kostenLeistung=extraEinnahmen`)
+      //const nr = jahr;
+      //const jahr = "jahr";
+      //let jahrX = this.$store.state.form;
+      //let jahrY = this.$store.getters;
+      //console.log(this.jahr, this.$store.getters.jahr);
+      //this.calculateResultsApi = {}
+
+
+      /* api
+        .get(`/calculateResults?kostenleistung=extraEinnahmen&jahr=${this.$store.getters.jahr}`) //?jahr=${this.jahr}&kostenLeistung=extraEinnahmen`)
         .then(response => {
-          this.extraEinnahmenResultsApi = response.data[0];
+          this.calculateResultsApi.extraEinnahmen = response.data[0]
         })
-        .catch(error => console.log(error));
+        .catch(error => console.log(error))
+      api
+      .get(`/calculateResults?kostenleistung=wartungsvertraege&jahr=${this.$store.getters.jahr}`) //?jahr=${this.jahr}&kostenLeistung=extraEinnahmen`)
+      .then(response => {
+        this.calculateResultsApi.wartungsvertraege = response.data[0];
+      })
+        .catch(error => console.log(error)); */
+
+
+
+
+      let extraEinnahmen = `http://localhost:5000/api/calculateResults?kostenleistung=extraEinnahmen&jahr=${this.$store.getters.jahr}`
+      let wartungsvertraege = `http://localhost:5000/api/calculateResults?kostenleistung=wartungsvertraege&jahr=${this.$store.getters.jahr}`
+
+      const requestExtraEinnahmen = axios.get(extraEinnahmen);
+      const requestWartungsvertraege = axios.get(wartungsvertraege);
+
+      axios
+        .all([requestExtraEinnahmen, requestWartungsvertraege])
+        .then(
+          axios.spread((...responses) => {
+            this.calculateResultsApi = {}
+            this.calculateResultsApi.extraEinnahmen = responses[0].data
+            this.calculateResultsApi.wartungsvertraege= responses[1].data
+            //console.log(this.calculateResultsApi)
+          })
+        )
+        .catch(error => console.log(error))
+      
       //console.log(this.extraEinnahmenResultsApi)
 
       //this.jahreskennzahl = this.reloadArray(this.jahreskennzahl)
 
-      let produkte = "http://localhost:5000/api/produkte";
+      /* let produkte = "http://localhost:5000/api/produkte";
       let jahreskennzahlen = `http://localhost:5000/api/jahreskennzahlen?jahr=${this.$store.getters.jahr}`;
 
       const requestProdukte = axios.get(produkte);
@@ -109,11 +140,11 @@ export default {
         .all([requestProdukte, requestJahreskennzahlen])
         .then(
           axios.spread((...responses) => {
-            this.produktList = responses[0].data;
-            this.jahreskennzahlList = responses[1].data;
+            this.produktList = responses[0].data
+            this.jahreskennzahlList = responses[1].data
           })
         )
-        .catch(error => console.log(error));
+        .catch(error => console.log(error)) */
     },
     test() {
       console.log("updateprodukte")

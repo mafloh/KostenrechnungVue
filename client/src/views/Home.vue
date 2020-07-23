@@ -12,6 +12,7 @@
 import produkteJahresueberblick from '../components/produkteJahresueberblick.vue'
 import extraEinnahmen from '../components/extraEinnahmen.vue'
 import wartungsvertraege from '../components/wartungsvertraege.vue'
+
 export default {
     name: "home",
     components: {  
