@@ -14,9 +14,9 @@ chore: Regular code maintenance.
 
 <br>
       <div>
-  <!-- <b-button v-b-modal.modal-lg>Launch demo modal</b-button> -->
+  <!-- <b-button v-b-modal.modal-extra-einnahmen>Launch demo modal</b-button> -->
 
-  <b-modal id="modal-lg" size="xl" title="BootstrapVue" aria-hidden="false" @ok="updateItem(extraEinnahmenItem._id, extraEinnahmenItem)">
+  <b-modal id="modal-extra-einnahmen" size="xl" title="BootstrapVue" aria-hidden="false" @ok="updateItem(extraEinnahmenItem._id, extraEinnahmenItem)">
   
     <p class="my-4">
       <b-table-simple>
@@ -63,7 +63,7 @@ chore: Regular code maintenance.
           </b-th>
 
           <b-th>
-            <b-btn v-b-modal.modal-lg variant="info" :key="index" @click.prevent="loadItem(data._id)">Edit</b-btn>
+            <b-btn v-b-modal.modal-extra-einnahmen variant="info" :key="index" @click.prevent="loadItem(data._id)">Edit</b-btn>
           </b-th>
         </b-tr>
 
@@ -127,6 +127,7 @@ chore: Regular code maintenance.
           const response = await api
             .get('/extraEinnahmen')
           this.extraEinnahmenList = response.data
+          this.submitCalculateResultToStore(response.data)
         } catch(err) {
           console.log(err)
         }
@@ -162,19 +163,28 @@ chore: Regular code maintenance.
         
       },
       submitCalculateResult() {
-        const total =  this.totalExtraEinnahmen ()
+        const total =  this.totalExtraEinnahmen(this.extraEinnahmenList)
+        const totalCurrentYear = total.filter(item => item.jahr === this.$store.getters.jahr)
+        this.$store.dispatch("updateExtraEinnahmen", totalCurrentYear)
         total.forEach(async (item) => {
           const res = api.post(`/calculateResults`, item);
           if (res.status === 200) await this.reload();
         })
-        this.$emit('updateprodukte')
-        //console.log("updateprodukte")
+        
       },
-      totalExtraEinnahmen () {
+      submitCalculateResultToStore(array) {
+        const total = this.totalExtraEinnahmen(array)
+        const totalCurrentYear = total.filter(item => item.jahr === this.$store.getters.jahr)
+        console.log(totalCurrentYear)
+        this.$store.dispatch("updateExtraEinnahmen", totalCurrentYear)
+        
+        
+      },
+      totalExtraEinnahmen (extraEinnahmenListObject) {
         if (!this.extraEinnahmenList) {return 0}
         
         //Formats date of the array of objects to YYYY.
-        let extraEinnahmenListYear = this.extraEinnahmenList.map(obj => {
+        let extraEinnahmenListYear = extraEinnahmenListObject.map(obj => {
           const container = {}
           container['jahr'] = new Date(obj['datumAbgeschlossen']).getFullYear()
           container['preis'] = obj['preis']
@@ -201,6 +211,7 @@ chore: Regular code maintenance.
             })
           return accumulator
         }, [])
+        //console.log(summedByYear)
         return summedByYear
         //Promise.resolve('Success') //necessary??
       } 

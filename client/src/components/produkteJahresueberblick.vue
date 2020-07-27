@@ -1,6 +1,6 @@
 <template>
-  <div id="produktJahresueberblick" :key="produktekeyforcereload" >
-    <ul v-on:updateprodukte="produktekeyforcereload++"> 
+  <div id="produktJahresueberblick" >
+    <ul > 
       <produkt-item
         v-for="item in produktList"
         v-bind:produkt="item"
@@ -53,8 +53,7 @@ export default {
       produktList: null, //Eine Variable wird angelegt, damit axios etwas in die variable schreiben kann und es mit v-for angezeigt werden kann.
       calculateResultsApi: null,
       jahrCurrent: new Date().getFullYear(),
-      timeoutId: null, //fürs debouncing bei der eingabe des jahres
-      produktekeyforcereload: 0
+      timeoutId: null //fürs debouncing bei der eingabe des jahres
     };
   },
   mounted() {
@@ -125,6 +124,7 @@ export default {
           })
         )
         .catch(error => console.log(error))
+
       
       //console.log(this.extraEinnahmenResultsApi)
 

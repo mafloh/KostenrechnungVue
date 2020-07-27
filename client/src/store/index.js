@@ -8,20 +8,27 @@ export default new Vuex.Store ({
     
     state: {
        form: {jahr: null},
-       produktKeyForceReload: 0
+       calculateResults: {extraEinnahmen: {}, terraSchueler: {}, terraWeb: {}, sonstige: {}}
     },
     mutations: {
         updateJahr (state, value) {
             state.form.jahr = value
+        }, 
+        updateExtraEinnahmen (state, value) {
+            state.calculateResults.extraEinnahmen = value
         }
     },
     actions: {
         updateJahr (context, jahr) {
                 context.commit('updateJahr', jahr)
+        },
+        updateExtraEinnahmen (context, value) {
+            context.commit('updateExtraEinnahmen', value)
         }
     },
     getters: {
-        jahr: (state) => state.form.jahr
+        jahr: (state) => state.form.jahr,
+        extraEinnahmen: (state) => state.calculateResults.extraEinnahmen
     },
     modules: {}
 
