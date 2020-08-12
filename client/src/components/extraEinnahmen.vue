@@ -175,7 +175,7 @@ chore: Regular code maintenance.
       submitCalculateResultToStore(array) {
         const total = this.totalExtraEinnahmen(array)
         const totalCurrentYear = total.filter(item => item.jahr === this.$store.getters.jahr)
-        console.log(totalCurrentYear)
+        //console.log(totalCurrentYear)
         this.$store.dispatch("updateExtraEinnahmen", totalCurrentYear)
         
         

@@ -7,7 +7,7 @@
         <ul class="kosten"> Serverkosten:  </ul>
         <ul class="kosten"> Nebenkosten:  </ul>
         <ul class="kosten"> Vertriebskosten:  </ul>
-        <ul class="leistungen">Wartungsverträge: {{ calculateResults.wartungsvertraege[0][name] }}</ul>
+        <ul class="leistungen">Wartungsverträge: {{ this.$store.getters.wartungsvertraege[0][name] }}</ul>
         <ul class="leistungen"  >Extra Einnahmen: {{ this.$store.getters.extraEinnahmen[0][name] }}</ul>
         
     </li>

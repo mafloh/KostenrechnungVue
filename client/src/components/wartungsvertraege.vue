@@ -284,6 +284,7 @@ export default {
                 const response = await api
                     .get('/wartungsvertraege')
                 this.wartungsvertraegeList = response.data
+                this.submitCalculateResultToStore(response.data)
             } catch(err) {
                 console.log(err)
             }
@@ -306,13 +307,23 @@ export default {
         this.wartungsvertraegeItem = res.data
       },
       submitCalculateResult() {
-        const total =  this.totalWartungsvertraege ()
+        const total =  this.totalWartungsvertraege (this.wartungsvertraegeList)
+        const totalCurrentYear = total.filter(item => item.jahr === this.$store.getters.jahr)
+        this.$store.dispatch("updateWartungsvertraege", totalCurrentYear)
         total.forEach(async (item) => {
           const res = api.post(`/calculateResults`, item);
           if (res.status === 200) await this.reload();
         })
-        this.$emit('updateprodukte')
+        //this.$emit('updateprodukte')
         //console.log("updateprodukte")
+      },
+      submitCalculateResultToStore(array) {
+        const total = this.totalWartungsvertraege(array)
+        const totalCurrentYear = total.filter(item => item.jahr === this.$store.getters.jahr)
+        //console.log(totalCurrentYear)
+        this.$store.dispatch("updateWartungsvertraege", totalCurrentYear)
+        
+        
       },
       totalWartungsvertraege () {
         if (!this.wartungsvertraegeList) {return 0}
@@ -368,14 +379,11 @@ export default {
       } 
     },
     async mounted () {
-       await this.reload (),
-       api
+        api
           .get('/produkte')
           .then(response => (this.produkteList = response.data))
-          .catch(error => console.log(error))
-       
-      
-
+          .catch(error => console.log(error)),
+       await this.reload ()
     }
 }
 </script>

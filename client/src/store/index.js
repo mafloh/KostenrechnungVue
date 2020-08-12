@@ -8,7 +8,7 @@ export default new Vuex.Store ({
     
     state: {
        form: {jahr: null},
-       calculateResults: {extraEinnahmen: {}, terraSchueler: {}, terraWeb: {}, sonstige: {}}
+       calculateResults: {extraEinnahmen: {}, wartungsvertraege: {}}
     },
     mutations: {
         updateJahr (state, value) {
@@ -16,6 +16,9 @@ export default new Vuex.Store ({
         }, 
         updateExtraEinnahmen (state, value) {
             state.calculateResults.extraEinnahmen = value
+        }, 
+        updateWartungsvertraege (state, value) {
+            state.calculateResults.wartungsvertraege = value
         }
     },
     actions: {
@@ -24,11 +27,15 @@ export default new Vuex.Store ({
         },
         updateExtraEinnahmen (context, value) {
             context.commit('updateExtraEinnahmen', value)
+        },
+        updateWartungsvertraege (context, value) {
+            context.commit('updateWartungsvertraege', value)
         }
     },
     getters: {
         jahr: (state) => state.form.jahr,
-        extraEinnahmen: (state) => state.calculateResults.extraEinnahmen
+        extraEinnahmen: (state) => state.calculateResults.extraEinnahmen,
+        wartungsvertraege: (state) => state.calculateResults.wartungsvertraege
     },
     modules: {}
 
