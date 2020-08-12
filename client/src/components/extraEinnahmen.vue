@@ -192,7 +192,8 @@ chore: Regular code maintenance.
           return container
         })
 
-        //Create an object out of produktList. This object will be attached in reduce function in accumulator. this way there is never undefined in for the product price in the reduce function.
+        //Create an object out of produktList. This object will be attached in reduce function in accumulator. this way there is never undefined in the product price in the reduce function.
+        console.log(this.produkteList)
         let produkteListNull = {}
         this.produkteList.map( (item) => {
           produkteListNull[item.name] = 0
@@ -217,11 +218,11 @@ chore: Regular code maintenance.
       } 
     },
     async mounted () {
-      await this.reload(),
       api
           .get('/produkte')
           .then(response => (this.produkteList = response.data))
-          .catch(error => console.log(error))
+          .catch(error => console.log(error)),
+      await this.reload()
     },
     components: {
       //editExtraEinnahmen
