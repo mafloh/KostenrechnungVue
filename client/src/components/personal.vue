@@ -186,41 +186,43 @@ export default {
       //setTimeout(() => this.submitCalculateResult(), 2000)
     },
     submitCalculateResult() {
-      const total = this.totalPersonal(this.personalList);
+      const total = this.totalPersonal(this.personalList)
+      //console.log(this.personalList)
       const totalCurrentYear = total.filter(
         (item) => item.jahr === this.$store.getters.jahr
-      );
-      this.$store.dispatch("updatePersonal", totalCurrentYear);
+      )
+      this.$store.dispatch("updatePersonal", totalCurrentYear)
       total.forEach(async (item) => {
-        const res = api.post(`/calculateResults`, item);
-        if (res.status === 200) await this.reload();
-      });
+        const res = api.post(`/calculateResults`, item)
+        if (res.status === 200) await this.reload()
+      })
     },
     submitCalculateResultToStore(array) {
-      const total = this.totalPersonal(array);
+      const total = this.totalPersonal(array)
       const totalCurrentYear = total.filter(
         (item) => item.jahr === this.$store.getters.jahr
       );
       //console.log(totalCurrentYear)
-      this.$store.dispatch("updatePersonal", totalCurrentYear);
+      this.$store.dispatch("updatePersonal", totalCurrentYear)
     },
-    totalPersonal () {
+    totalPersonal (personalListObject) {
         if (!this.personalList) {return 0}
         
         //Formats date of the array of objects to YYYY.
-        let personalListYear = this.personalList.map(obj => {
+        let personalListYear = personalListObject.map(obj => {
           const container = {}
           container['jahrStart'] = new Date(obj['abDatum']).getFullYear()
           container['jahrStop'] = new Date(obj['bisDatum']).getFullYear()
           container['monatStart'] = new Date(obj['abDatum']).getMonth()
           container['monatStop'] = new Date(obj['bisDatum']).getMonth()
           container['lohnGesamtProMonat'] = obj['lohnGesamtProMonat'] ? obj['lohnGesamtProMonat'] : 0
-          container['prozentWeb'] = obj['prozentWeb'] ? obj['prozentWeb'] : 0
-          container['prozentSchueler'] = obj['prozentSchueler'] ? obj['prozentSchueler'] : 0
-          container['prozentIndividual'] = obj['prozentIndividual'] ? obj['prozentIndividual'] : 0
+          container['terraWeb'] = obj['prozentWeb'] ? obj['prozentWeb'] : 0
+          container['terraSchüler'] = obj['prozentSchueler'] ? obj['prozentSchueler'] : 0
+          container['terraIndividual'] = obj['prozentIndividual'] ? obj['prozentIndividual'] : 0
+          container['sonstige'] = 0
           return container
         })
-
+         
         //Create an object out of produktList
         let produkteListNull = {}
         this.produkteList.map( (item) => {
@@ -229,23 +231,28 @@ export default {
 
         //Create Object which sums grouped by year and product
         const currentYear = new Date().getFullYear() //current year for using in reduce
+        console.log(this.produkteList)
         
         let summedByYear = personalListYear.reduce((accumulator, object) => {
             
                 let i = 0
-                for ( i=object.jahr; i <= currentYear; i++) {
+                for ( i=object.jahrStart; i <= currentYear; i++) {
                 
-                    if (!accumulator.some((item) => item.jahr === i )) {
-                        accumulator.push({ jahr: i, kostenLeistung: 'personal', ...produkteListNull })
+                    if (!accumulator.some((item) => item.jahrStart === i )) {
+                        accumulator.push({ jahrStart: i, kostenLeistung: 'personal', ...produkteListNull })
                 }} 
 
                 accumulator.forEach((item) => {
-                        if (item.jahr === object.jahr ) {
-                            item[object.produkt] = item[object.produkt] +  (12 - object.monat) * (object.proMonat + object.individualStrassendatenProMonat) + object.jahreswartung + object.einmaligeZahlung
-                        } if (item.jahr > object.jahr) {
-                            item[object.produkt] = item [object.produkt] + 12 * (object.proMonat + object.individualStrassendatenProMonat) + object.jahreswartung
-                        }
-                    }) 
+                  if (item.jahrStart === object.jahrStart ) {
+                    let j = 0
+                    for (j=0 ; j < this.produkteList.length; j ++) {
+                      item[this.produkteList[j].name] = item[this.produkteList[j].name] +  (12 - object.monatStart) * object.lohnGesamtProMonat * object[this.produkteList[j].name]
+                    }
+                  } if (item.jahrStart > object.jahrStart) {
+                      item[object.produkt] = item [object.produkt] + 12 * (object.proMonat + object.individualStrassendatenProMonat) + object.jahreswartung
+                  }
+                }) 
+                console.log(accumulator)
                 return accumulator
           
         }, [])
