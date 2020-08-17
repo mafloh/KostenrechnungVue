@@ -10,6 +10,7 @@ const jahreskennzahlenRouter = require('../routes/jahreskennzahlen.routes')
 const extraEinnahmenRouter = require('../routes/extraEinnahmen.routes')
 const calculateResultsRouter = require('../routes/calculateResults.routes')
 const wartungsvertraegeRouter = require('../routes/wartungsvertraege.routes')
+const personalRouter = require('../routes/personal.routes')
 
 const app = express()
 
@@ -46,6 +47,7 @@ app.use('/api/jahreskennzahlen', jahreskennzahlenRouter)
 app.use('/api/extraeinnahmen', extraEinnahmenRouter)
 app.use('/api/calculateResults', calculateResultsRouter)
 app.use('/api/wartungsvertraege', wartungsvertraegeRouter)
+app.use('/api/personal', personalRouter)
 
 
 app.listen(port, () => console.log(`Server started on port ${port}`)) 

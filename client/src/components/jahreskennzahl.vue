@@ -1,7 +1,7 @@
 <template>
    <div>
       
-        <li v-if="this.$store.getters.extraEinnahmen.length"> <!-- <li v-if="name === produkt_id"> --> <!-- v-if: name und produkt_id(props die mit v-bind(doppelpunkt ist shorthand) vom produkte.vue kommt) -->
+        <li v-if="this.$store.getters.extraEinnahmen.length && this.$store.getters.wartungsvertraege.length"> <!-- <li v-if="name === produkt_id"> --> <!-- v-if: name und produkt_id(props die mit v-bind(doppelpunkt ist shorthand) vom produkte.vue kommt) -->
         <ul class="kosten"> Personal:  </ul>
         <ul class="kosten"> Gemeinkosten:  </ul>
         <ul class="kosten"> Serverkosten:  </ul>

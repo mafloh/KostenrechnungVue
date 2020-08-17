@@ -59,10 +59,6 @@ chore: Regular code maintenance.
           </b-th>
 
           <b-th>
-            <b-btn variant="danger" @click.prevent="removeItem(data._id)">Delete</b-btn>
-          </b-th>
-
-          <b-th>
             <b-btn v-b-modal.modal-extra-einnahmen variant="info" :key="index" @click.prevent="loadItem(data._id)">Edit</b-btn>
           </b-th>
         </b-tr>
@@ -110,9 +106,8 @@ chore: Regular code maintenance.
         ],
         extraEinnahmenList: null,
         newExtraEinnahme: {},
-        editEntryId: null,
         extraEinnahmenItem: {},
-        produkteList: [],
+        produkteList: []
       }
     },
     computed: {
@@ -193,7 +188,6 @@ chore: Regular code maintenance.
         })
 
         //Create an object out of produktList. This object will be attached in reduce function in accumulator. this way there is never undefined in the product price in the reduce function.
-        console.log(this.produkteList)
         let produkteListNull = {}
         this.produkteList.map( (item) => {
           produkteListNull[item.name] = 0
