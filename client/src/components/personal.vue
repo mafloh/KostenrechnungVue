@@ -63,7 +63,7 @@
 
       <b-tbody>
         <b-tr v-for="(data, index) in personalList" :key="index">
-          <b-th v-for="(field, index) in fields" :key="index">
+          <b-th  v-for="(field, index) in fields" :key="index">
             <span
               v-if="data[field.key] && field.key === 'abDatum'"
             >{{ new Date(data[field.key]).toLocaleDateString() }}</span>
@@ -199,7 +199,7 @@ export default {
     },
     submitCalculateResultToStore(array) {
       const total = this.totalPersonal(array)
-      const totalCurrentYear = total.filter(item => item.jahrStart === this.$store.getters.jahr)
+      const totalCurrentYear = total.filter(item => item.jahr === this.$store.getters.jahr)
       this.$store.dispatch("updatePersonal", totalCurrentYear)
     },
     totalPersonal (personalListObject) {
@@ -220,14 +220,12 @@ export default {
           container['sonstige'] = 0
           return container
         })
-        //ok: console.log(personalListYear)
          
         //Create an object out of produktList
         let produkteListNull = {}
         this.produkteList.map( (item) => {
           produkteListNull[item.name] = 0
         })
-        //ok: console.log(produkteListNull)
 
         //Create Object which sums grouped by year and product
         //const currentYear = new Date().getFullYear() //current year for using in reduce
@@ -235,31 +233,35 @@ export default {
         let summedByYear = personalListYear.reduce((accumulator, object) => {
           let i = 0
           for ( i=object.jahrStart; i <= object.jahrStop; i++) {
-              if (!accumulator.some((item) => item.jahrStart === i )) {
-                  accumulator.push({ jahrStart: i, kostenLeistung: 'personal', ...produkteListNull })
+              if (!accumulator.some((item) => item.jahr === i )) {
+                  accumulator.push({ jahr: i, kostenLeistung: 'personal', ...produkteListNull })
           }} 
           accumulator.forEach((item) => {
-            if (item.jahrStart === object.jahrStart ) {
+             if (item.jahr === object.jahrStart && !(item.jahr === object.jahrStop)  ) {
               let j = 0
               for (j = 0 ; j < this.produkteList.length; j ++) {
                 item[this.produkteList[j].name] = item[this.produkteList[j].name] +  (12 - object.monatStart) * object.lohnGesamtProMonat * object[this.produkteList[j].name] * 0.01
               }
-            } else if (item.jahrStart > object.jahrStart) {
+            }  if (item.jahr > object.jahrStart  && item.jahr < object.jahrStop ) {
                 let j = 0
                 for (j = 0 ; j < this.produkteList.length; j ++) {
                   item[this.produkteList[j].name] = item[this.produkteList[j].name] +  12 * object.lohnGesamtProMonat * object[this.produkteList[j].name] * 0.01
               }
-            } /* else if (item.jahrStop === object.jahrStop ) {
+            }   if (item.jahr === object.jahrStop && !(item.jahr === object.jahrStart) ) {
                 let j = 0
                 for (j = 0 ; j < this.produkteList.length; j ++) {
-                  item[this.produkteList[j].name] = item[this.produkteList[j].name] +  object.monatStop * object.lohnGesamtProMonat * object[this.produkteList[j].name] * 0.01
+                  item[this.produkteList[j].name] = item[this.produkteList[j].name] +  (object.monatStop + 1) * object.lohnGesamtProMonat * object[this.produkteList[j].name] * 0.01
                 }
-              } */
+              } if (item.jahr === object.jahrStop && item.jahr === object.jahrStart ) {
+                let j = 0
+                for (j = 0 ; j < this.produkteList.length; j ++) {
+                  item[this.produkteList[j].name] = item[this.produkteList[j].name] +  (object.monatStop - object.monatStart + 1) * object.lohnGesamtProMonat * object[this.produkteList[j].name] * 0.01
+                }
+              } 
           }) 
           return accumulator
           
         }, [])
-        console.log(summedByYear)
         return summedByYear
         
         //Promise.resolve('Success') //necessary??

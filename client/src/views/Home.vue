@@ -26,17 +26,9 @@ export default {
 }
 </script>
 
-<style>
-body {
-    font-size: 3rem;    
-    color: red;
-}
+<style lang="css">
+
   
-.table th {
-    font-size: 12px;
-}
-.form-control {
-    font-size: 12px;
-}
+
 </style>
 

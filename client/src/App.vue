@@ -15,6 +15,8 @@
   -moz-osx-font-smoothing: grayscale;
   margin-top: 20px;
   color: #2c3e50;
+  word-break: normal;
   
 }
+
 </style>
