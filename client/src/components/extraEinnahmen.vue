@@ -16,9 +16,9 @@ chore: Regular code maintenance.
       <div>
   <!-- <b-button v-b-modal.modal-extra-einnahmen>Launch demo modal</b-button> -->
 
-  <b-modal id="modal-extra-einnahmen" size="xl" title="BootstrapVue" aria-hidden="false" @ok="updateItem(extraEinnahmenItem._id, extraEinnahmenItem)">
+  <b-modal id="modal-extra-einnahmen" size="xl" title="Extra Einnahme" area-hidden="false" @ok="updateItem(extraEinnahmenItem._id, extraEinnahmenItem)">
   
-    <p class="my-4">m
+    <p class="my-4">
       <b-table-simple>
         <b-tr>
           <b-th v-for="(field, index) in fields" :key="index">

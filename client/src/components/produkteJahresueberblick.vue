@@ -18,9 +18,10 @@
       id="modal-kalkulierte-kosten"
       size="xl"
       title="Kalkulierte Kosten hinzufügen"
-      aria-hidden="false"
+      area-hidden="false"
       @ok="submit()"
     >
+    {{newKalkulierteKosten}}
       <b-table-simple striped hover>
         <b-thead>
           <b-tr>
@@ -139,7 +140,7 @@ export default {
     /*         .then(response => (this.produktList = response.data))
         .then(response => (this.jahreskennzahlItem = response.data)) */
 
-    this.reload()
+   // this.reload()
   },
   computed: {
     jahr: {
@@ -164,6 +165,7 @@ export default {
     }, */
      async reload() {
       try {
+        console.log(this.bFormOptionsKalkulierteKosten)
         for (let i = 0; i < this.bFormOptionsKalkulierteKosten.length; i++){
           const response = await api.get(`/kalkulierteKosten/newest?namekosten=${this.bFormOptionsKalkulierteKosten[i]}`)
           console.log(response)
@@ -179,9 +181,9 @@ export default {
       const res = await api.post(
         `/kalkulierteKosten`,
         this.newKalkulierteKosten
-      );
-      if (res.status === 200) await this.reload();
-      this.submitKalkulierteKosten();
+      )
+      this.submitKalkulierteKosten()
+      if (res.status === 200) await this.reload()
     },
     async removeItem(id) {
       const res = await api.delete(`/kalkulierteKosten/${id}`);
@@ -203,16 +205,16 @@ export default {
       }
     },
     submitKalkulierteKosten() {
-      const total = this.totalKalkulierteKosten(this.kalkulierteKostenList);
+      //const total = this.totalKalkulierteKosten(this.kalkulierteKostenList);
       //console.log(this.kalkulierteKostenList)
       /* const totalCurrentYear = total.filter(
         (item) => item.jahr === this.$store.getters.jahr
       ) */
       this.$store.dispatch("updateKalkulierteKosten", this.kalkulierteKostenList);
-      total.forEach(async (item) => {
+     /*  total.forEach(async (item) => {
         const res = api.post(`/kalkulierteKosten`, item);
         if (res.status === 200) await this.reload();
-      });
+      }) */
     },
     submitKalkulierteKostenToStore(array) {
       const total = this.totalKalkulierteKosten(array);

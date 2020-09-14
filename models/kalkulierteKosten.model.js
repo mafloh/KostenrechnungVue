@@ -19,3 +19,4 @@ const kalkulierteKostenSchema = new mongoose.Schema({
 })
 
 module.exports = mongoose.model('kalkulierteKosten', kalkulierteKostenSchema)
+

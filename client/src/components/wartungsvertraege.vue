@@ -2,7 +2,7 @@
     <div>
     <h2>Wartungsverträge Terra Schüler</h2>
 
-    <b-modal id="wartungsvertraege-terra-schueler" size="xl" title="BootstrapVue" aria-hidden="false" @ok="updateItem(wartungsvertraegeItem._id, wartungsvertraegeItem)">
+    <b-modal id="wartungsvertraege-terra-schueler" size="xl" title="BootstrapVue" area-hidden="false" @ok="updateItem(wartungsvertraegeItem._id, wartungsvertraegeItem)">
  
     <p class="my-4">
       <b-table-simple>
@@ -64,7 +64,7 @@
 
      <h2>Wartungsverträge Terra Individual</h2>
 
-    <b-modal id="wartungsvertraege-terra-individual" size="xl" title="BootstrapVue" aria-hidden="false" @ok="updateItem(wartungsvertraegeItem._id, wartungsvertraegeItem)">
+    <b-modal id="wartungsvertraege-terra-individual" size="xl" title="BootstrapVue" area-hidden="false" @ok="updateItem(wartungsvertraegeItem._id, wartungsvertraegeItem)">
  
     <p class="my-4">
       <b-table-simple>
@@ -126,7 +126,7 @@
 
     <h2>Wartungsverträge Terra Web</h2>
 
-    <b-modal id="wartungsvertraege-terra-web" size="xl" title="BootstrapVue" aria-hidden="false" @ok="updateItem(wartungsvertraegeItem._id, wartungsvertraegeItem)">
+    <b-modal id="wartungsvertraege-terra-web" size="xl" title="BootstrapVue" area-hidden="false" @ok="updateItem(wartungsvertraegeItem._id, wartungsvertraegeItem)">
  
     <p class="my-4">
       <b-table-simple>

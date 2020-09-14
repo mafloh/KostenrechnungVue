@@ -8,7 +8,7 @@
         id="modal-personal"
         size="xl"
         title="BootstrapVue"
-        aria-hidden="false"
+        area-hidden="false"
         @ok="updateItem(personalItem._id, personalItem)"
       >
         <p class="my-4">
