@@ -8,7 +8,8 @@ export default new Vuex.Store ({
     
     state: {
        form: {jahr: null},
-       calculateResults: {extraEinnahmen: {}, wartungsvertraege: {}, personal: {}}
+       calculateResults: {extraEinnahmen: {}, wartungsvertraege: {}, personal: {}},
+       kalkulierteKosten: {kalkulierteKosten: {}}
     },
     mutations: {
         updateJahr (state, value) {
@@ -22,6 +23,9 @@ export default new Vuex.Store ({
         }, 
         updatePersonal (state, value) {
             state.calculateResults.personal = value
+        },
+        updateKalkulierteKosten (state, value) {
+            state.kalkulierteKosten.kalkulierteKosten = value
         }
     },
     actions: {
@@ -36,13 +40,17 @@ export default new Vuex.Store ({
         },
         updatePersonal (context, value) {
             context.commit('updatePersonal', value)
+        },
+        updateKalkulierteKosten (context, value) {
+            context.commit('updateKalkulierteKosten', value)
         }
     },
     getters: {
         jahr: (state) => state.form.jahr,
         extraEinnahmen: (state) => state.calculateResults.extraEinnahmen,
         wartungsvertraege: (state) => state.calculateResults.wartungsvertraege,
-        personal: (state) => state.calculateResults.personal
+        personal: (state) => state.calculateResults.personal,
+        kalkulierteKosten: (state) => state.kalkulierteKosten.kalkulierteKosten
     },
     modules: {}
 

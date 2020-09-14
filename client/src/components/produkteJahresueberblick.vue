@@ -9,6 +9,60 @@
       ></produkt-item>
     </ul>
 
+<b-btn
+      v-b-modal.modal-kalkulierte-kosten
+      variant="info"
+    >Add kalkulierte Kosten</b-btn>
+
+    <b-modal
+      id="modal-kalkulierte-kosten"
+      size="xl"
+      title="Kalkulierte Kosten hinzufügen"
+      aria-hidden="false"
+      @ok="submit()"
+    >
+      <b-table-simple striped hover>
+        <b-thead>
+          <b-tr>
+            <b-th v-for="(field, index) in fields" :key="index">{{field.key}}</b-th>
+            <b-th></b-th>
+          </b-tr>
+        </b-thead>
+
+        <b-tbody>
+          <b-tr>
+            <b-th v-for="(field, index) in fields" :key="index">
+              <b-form-select
+                v-if="field.key === 'nameKosten'"
+                v-model="newKalkulierteKosten[field.key]"
+                :options="bFormOptionsKalkulierteKosten"
+              ></b-form-select>
+              <b-form-input
+                v-else-if="field.key === 'terraWeb'"
+                v-model="newKalkulierteKosten[field.key]"
+                type="number"
+              ></b-form-input>
+              <b-form-input
+                v-else-if="field.key === 'terraSchüler'"
+                v-model="newKalkulierteKosten[field.key]"
+                type="number"
+              ></b-form-input>
+              <b-form-input
+                v-else-if="field.key === 'terraIndividual'"
+                v-model="newKalkulierteKosten[field.key]"
+                type="number"
+              ></b-form-input>
+              <b-form-input
+                v-else
+                :placeholder="field.key"
+                v-model="newKalkulierteKosten[field.key]"
+              ></b-form-input>
+            </b-th>
+          </b-tr>
+        </b-tbody>
+      </b-table-simple>
+    </b-modal>
+
     <div class="inputJahr">
       <input v-model="jahr" style="text-align:right" >
     </div>
@@ -19,7 +73,8 @@
 <script>
 import produktItem from "./produkt.vue"
 //import jahreskennzahlItem from "./jahreskennzahl.vue";
-import axios from "axios";
+import axios from "axios"
+import api from "../api.js"
 //import api from "../api.js";
 //import {store} from '../store/index.js'
 
@@ -53,10 +108,27 @@ export default {
       produktList: null, //Eine Variable wird angelegt, damit axios etwas in die variable schreiben kann und es mit v-for angezeigt werden kann.
       calculateResultsApi: null,
       jahrCurrent: new Date().getFullYear(),
-      timeoutId: null //fürs debouncing bei der eingabe des jahres
-    };
+      timeoutId: null, //fürs debouncing bei der eingabe des jahres
+      fields: [
+        { key: "nameKosten", sortable: true },
+        { key: "terraWeb", sortable: false },
+        { key: "terraSchüler", sortable: false },
+        { key: "terraIndividual", sortable: false },
+        { key: "sonstige", sortable: false },
+      ],
+      bFormOptionsKalkulierteKosten: [
+        "Gemeinkosten",
+        "Serverkosten",
+        "Nebenkosten",
+        "Vertriebskosten",
+      ],
+      newKalkulierteKosten: {},
+      kalkulierteKostenItem: {},
+      produkteList: [],
+      kalkulierteKostenList: []
+    }
   },
-  mounted() {
+  async mounted() {
     //load current year into store
     this.$store.dispatch("updateJahr", this.jahrCurrent);
 
@@ -67,7 +139,7 @@ export default {
     /*         .then(response => (this.produktList = response.data))
         .then(response => (this.jahreskennzahlItem = response.data)) */
 
-    this.reload();
+    this.reload()
   },
   computed: {
     jahr: {
@@ -81,73 +153,96 @@ export default {
     }
   },
   methods: {
-    reload: function() {
-      //load extraEinnahmenResults
-      //const nr = jahr;
-      //const jahr = "jahr";
-      //let jahrX = this.$store.state.form;
-      //let jahrY = this.$store.getters;
-      //console.log(this.jahr, this.$store.getters.jahr);
-      //this.calculateResultsApi = {}
-
-
-      /* api
-        .get(`/calculateResults?kostenleistung=extraEinnahmen&jahr=${this.$store.getters.jahr}`) //?jahr=${this.jahr}&kostenLeistung=extraEinnahmen`)
-        .then(response => {
-          this.calculateResultsApi.extraEinnahmen = response.data[0]
-        })
-        .catch(error => console.log(error))
-      api
-      .get(`/calculateResults?kostenleistung=wartungsvertraege&jahr=${this.$store.getters.jahr}`) //?jahr=${this.jahr}&kostenLeistung=extraEinnahmen`)
-      .then(response => {
-        this.calculateResultsApi.wartungsvertraege = response.data[0];
-      })
-        .catch(error => console.log(error)); */
-
-
-
-
-      let extraEinnahmen = `http://localhost:5000/api/calculateResults?kostenleistung=extraEinnahmen&jahr=${this.$store.getters.jahr}`
-      let wartungsvertraege = `http://localhost:5000/api/calculateResults?kostenleistung=wartungsvertraege&jahr=${this.$store.getters.jahr}`
-
-      const requestExtraEinnahmen = axios.get(extraEinnahmen);
-      const requestWartungsvertraege = axios.get(wartungsvertraege);
-
-      axios
-        .all([requestExtraEinnahmen, requestWartungsvertraege])
-        .then(
-          axios.spread((...responses) => {
-            this.calculateResultsApi = {}
-            this.calculateResultsApi.extraEinnahmen = responses[0].data
-            this.calculateResultsApi.wartungsvertraege= responses[1].data
-            //console.log(this.calculateResultsApi)
-          })
-        )
-        .catch(error => console.log(error))
-
-      
-      //console.log(this.extraEinnahmenResultsApi)
-
-      //this.jahreskennzahl = this.reloadArray(this.jahreskennzahl)
-
-      /* let produkte = "http://localhost:5000/api/produkte";
-      let jahreskennzahlen = `http://localhost:5000/api/jahreskennzahlen?jahr=${this.$store.getters.jahr}`;
-
-      const requestProdukte = axios.get(produkte);
-      const requestJahreskennzahlen = axios.get(jahreskennzahlen);
-
-      axios
-        .all([requestProdukte, requestJahreskennzahlen])
-        .then(
-          axios.spread((...responses) => {
-            this.produktList = responses[0].data
-            this.jahreskennzahlList = responses[1].data
-          })
-        )
-        .catch(error => console.log(error)) */
+      /* reload() {
+        for (let i = 0; i < this.bFormOptionsKalkulierteKosten.length; i++){
+          const response =  api.get(`/kalkulierteKosten/newest?namekosten=${this.bFormOptionsKalkulierteKosten[i]}`)
+          console.log(response)
+          this.kalkulierteKostenList.push(response.data[0])
+        }
+        console.log(this.kalkulierteKostenList)
+        this.$store.dispatch("updateKalkulierteKosten", this.kalkulierteKostenList)
+    }, */
+     async reload() {
+      try {
+        for (let i = 0; i < this.bFormOptionsKalkulierteKosten.length; i++){
+          const response = await api.get(`/kalkulierteKosten/newest?namekosten=${this.bFormOptionsKalkulierteKosten[i]}`)
+          console.log(response)
+          this.kalkulierteKostenList.push(response.data[0])
+        }
+        console.log(this.kalkulierteKostenList)
+        this.$store.dispatch("updateKalkulierteKosten", this.kalkulierteKostenList)
+      } catch (err) {
+        console.log(err);
+      }
+    }, 
+    async submit() {
+      const res = await api.post(
+        `/kalkulierteKosten`,
+        this.newKalkulierteKosten
+      );
+      if (res.status === 200) await this.reload();
+      this.submitKalkulierteKosten();
     },
-    test() {
-      console.log("updateprodukte")
+    async removeItem(id) {
+      const res = await api.delete(`/kalkulierteKosten/${id}`);
+      if (res.status === 200) {
+        alert(`Eintrag mit ID ${id} wurde gelöscht.`);
+        await this.reload();
+        this.submitKalkulierteKosten();
+      }
+    },
+    async loadItem(id) {
+      const res = await api.get(`/kalkulierteKosten/ID/${id}`);
+      this.kalkulierteKostenItem = res.data;
+    },
+    async updateItem(id, ItemToUpdate) {
+      const res = await api.put(`/kalkulierteKosten/${id}`, ItemToUpdate);
+      if (res.status === 200) {
+        await this.reload();
+        this.submitKalkulierteKosten();
+      }
+    },
+    submitKalkulierteKosten() {
+      const total = this.totalKalkulierteKosten(this.kalkulierteKostenList);
+      //console.log(this.kalkulierteKostenList)
+      /* const totalCurrentYear = total.filter(
+        (item) => item.jahr === this.$store.getters.jahr
+      ) */
+      this.$store.dispatch("updateKalkulierteKosten", this.kalkulierteKostenList);
+      total.forEach(async (item) => {
+        const res = api.post(`/kalkulierteKosten`, item);
+        if (res.status === 200) await this.reload();
+      });
+    },
+    submitKalkulierteKostenToStore(array) {
+      const total = this.totalKalkulierteKosten(array);
+      const totalCurrentYear = total.filter(
+        (item) => item.jahr === this.$store.getters.jahr
+      );
+      this.$store.dispatch("updateKalkulierteKosten", totalCurrentYear);
+    },
+    totalKalkulierteKosten(kalkulierteKostenListObject) {
+      if (!kalkulierteKostenListObject) {
+        return 0;
+      }
+
+      //Formats date of the array of objects to YYYY.
+      let kalkulierteKostenListYear = kalkulierteKostenListObject.map((obj) => {
+        const container = {};
+        container["jahr"] = new Date(obj["jahr"]).getFullYear();
+        container["nameKosten"] = obj["nameKosten"] ? obj["nameKosten"] : "";
+        container["terraWeb"] = obj["prozentWeb"] ? obj["prozentWeb"] : 0;
+        container["terraSchüler"] = obj["prozentSchueler"]
+          ? obj["prozentSchueler"]
+          : 0;
+        container["terraIndividual"] = obj["prozentIndividual"]
+          ? obj["prozentIndividual"]
+          : 0;
+        container["sonstige"] = 0;
+        return container;
+      });
+      console.log(kalkulierteKostenListYear)
+      return kalkulierteKostenListYear;
     }
   }
 };

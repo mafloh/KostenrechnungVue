@@ -18,7 +18,7 @@ chore: Regular code maintenance.
 
   <b-modal id="modal-extra-einnahmen" size="xl" title="BootstrapVue" aria-hidden="false" @ok="updateItem(extraEinnahmenItem._id, extraEinnahmenItem)">
   
-    <p class="my-4">
+    <p class="my-4">m
       <b-table-simple>
         <b-tr>
           <b-th v-for="(field, index) in fields" :key="index">
