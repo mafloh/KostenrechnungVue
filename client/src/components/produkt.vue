@@ -1,7 +1,7 @@
 <template>
 <div>
     <li> 
-        {{ produkt.name }} 
+       <h3> {{ produkt.name }} : 330 </h3>
         
         
         

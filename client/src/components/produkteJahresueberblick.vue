@@ -1,5 +1,6 @@
 <template>
   <div id="produktJahresueberblick" >
+    <hr />
     <ul > 
       <produkt-item
         v-for="item in produktList"
@@ -9,10 +10,7 @@
       ></produkt-item>
     </ul>
 
-<b-btn
-      v-b-modal.modal-kalkulierte-kosten
-      variant="info"
-    >Add kalkulierte Kosten</b-btn>
+
 
     <b-modal
       id="modal-kalkulierte-kosten"
@@ -63,11 +61,18 @@
         </b-tbody>
       </b-table-simple>
     </b-modal>
-
-    <div class="inputJahr">
-      <input v-model="jahr" style="text-align:right" >
-    </div>
     <hr />
+    
+    <div class="inputJahr">
+      <!-- <input v-model="jahr" style="text-align:right" > -->
+
+      <b-btn
+      v-b-modal.modal-kalkulierte-kosten
+      variant="light"
+      size="sm"
+    >Kalkulierte Kosten ändern</b-btn>
+    </div>
+    
   </div>
 </template>
 
