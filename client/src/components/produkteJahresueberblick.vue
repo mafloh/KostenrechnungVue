@@ -170,14 +170,27 @@ export default {
     }, */
      async reload() {
       try {
-        console.log(this.bFormOptionsKalkulierteKosten)
         for (let i = 0; i < this.bFormOptionsKalkulierteKosten.length; i++){
           const response = await api.get(`/kalkulierteKosten/newest?namekosten=${this.bFormOptionsKalkulierteKosten[i]}`)
-          console.log(response)
           this.kalkulierteKostenList.push(response.data[0])
         }
-        console.log(this.kalkulierteKostenList)
         this.$store.dispatch("updateKalkulierteKosten", this.kalkulierteKostenList)
+/* 
+        // Write total to DB if changed (not functioning yet)
+        const totalDb = await api.get(`/calculateResults?kostenleistung=total`)
+        const totalStoreArray = []
+        for (let i = 0; i < this.produktList; i++){
+           totalStoreArray.push(totalStore = this.$store.getters.wartungsvertraege[0][produkt.name] + this.$store.getters.extraEinnahmen[0][produkt.name] - this.$store.getters.personal[0][produkt.name])
+        }
+       */
+
+        /* if (responseTotal === this.totalFromStore.get) {
+          const res = await api.post(
+            `calculateResults`,
+            this.totalFromStore.get
+          )
+        } */
+
       } catch (err) {
         console.log(err);
       }

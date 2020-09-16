@@ -52,7 +52,7 @@ export default {
       get() {
         return this.$store.getters.kalkulierteKosten
       }
-    }
+    } 
 
     /* ,
         extraEinnahmenResultsProdukt:  function () {
