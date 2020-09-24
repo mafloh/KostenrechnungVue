@@ -50,7 +50,7 @@ export default {
         
         
 
-        let produkte = 'http://localhost:5000/api/produkte'
+        let produkte = '/api/produkte'
         //let calculateResults = `ÖÖÖhttp://localhost:5000/api/calculateResults?jahr=${this.$store.getters.jahr}`
 
         const requestProdukte = axios.get(produkte)

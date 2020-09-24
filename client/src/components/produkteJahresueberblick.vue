@@ -139,7 +139,7 @@ export default {
     this.$store.dispatch("updateJahr", this.jahrCurrent);
 
     axios
-      .get("http://localhost:5000/api/produkte")
+      .get("/api/produkte")
       .then(response => (this.produktList = response.data))
       .catch(error => console.log(error));
     /*         .then(response => (this.produktList = response.data))
