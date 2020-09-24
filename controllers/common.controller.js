@@ -89,11 +89,9 @@ exports.findNewest = async (Model, condition, res) => {
         if (!condition) {condition = null}
         const data = await Model.find(condition).limit(1).sort({$natural:-1})
         res.send(data)
-    } catch {
-        err => {
+    } catch (err) {
         res.status(500).send({
             message: err.message || "Ein Fehler ist beim abrufen passiert."
-        })    
-    }
+        })
     }
 }
