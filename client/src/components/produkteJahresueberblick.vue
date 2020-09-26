@@ -1,7 +1,7 @@
 <template>
-  <div id="produktJahresueberblick" >
+  <div id="produktJahresueberblick">
     <hr />
-    <ul > 
+    <ul>
       <produkt-item
         v-for="item in produktList"
         v-bind:produkt="item"
@@ -10,8 +10,6 @@
       ></produkt-item>
     </ul>
 
-
-
     <b-modal
       id="modal-kalkulierte-kosten"
       size="xl"
@@ -19,7 +17,7 @@
       area-hidden="false"
       @ok="submit()"
     >
-    {{newKalkulierteKosten}}
+      {{newKalkulierteKosten}}
       <b-table-simple striped hover>
         <b-thead>
           <b-tr>
@@ -61,24 +59,50 @@
         </b-tbody>
       </b-table-simple>
     </b-modal>
+
+    <b-modal
+      id="modal-json-importieren"
+      size="xl"
+      title="CSV importieren"
+      area-hidden="false"
+      @ok="submitJson()"
+    >
+      {{newJSON}}
+      <b-table-simple striped hover>
+        <b-thead>
+          <b-tr>
+            <b-th>CSV</b-th>
+            <b-th>Datenbankname</b-th>
+          </b-tr>
+        </b-thead>
+
+        <b-tbody>
+          <b-tr>
+            <b-th>
+              <b-form-textarea v-model="newJSON" type="text"></b-form-textarea>
+            </b-th>
+            <b-th>
+              <b-form-input v-model="selectDB" type="text"></b-form-input>
+            </b-th>
+          </b-tr>
+        </b-tbody>
+      </b-table-simple>
+    </b-modal>
+
     <hr />
-    
+
     <div class="inputJahr">
       <!-- <input v-model="jahr" style="text-align:right" > -->
 
-      <b-btn
-      v-b-modal.modal-kalkulierte-kosten
-      variant="light"
-      size="sm"
-    >Kalkulierte Kosten ändern</b-btn>
+      <b-btn v-b-modal.modal-kalkulierte-kosten variant="light" size="sm">Kalkulierte Kosten ändern</b-btn>
+      <b-btn v-b-modal.modal-json-importieren variant="light" size="sm">JSON importieren</b-btn>
     </div>
-    
   </div>
 </template>
 
 <script>
 import produktItem from "./produkt.vue"
-//import jahreskennzahlItem from "./jahreskennzahl.vue";
+//import jahreskennzahlItem from "./jahreskennzahl.vue"
 import axios from "axios"
 import api from "../api.js"
 //import api from "../api.js";
@@ -90,16 +114,18 @@ export default {
     // watch schaut ob sich etwas ändert. die im watcher funktion läuft mit zwei parametern: 1. action, 2. getter.
     jahr() {
       //debouncing
-        if (this.timeoutId) { //wenn timeoutId vorhanden ist, dann wird der timeout time zurückgesetzt und die timoutId auf null gesetzt. 
-            clearTimeout(this.timeoutId);
-            this.timeoutId = null;
-        }
-        this.timeoutId = setTimeout(async () => { // setTimeout evaluiert das ergebnis der funktion nach xxx millisekunden. d.h. this.reload() wird dann aufgerufen. 
-            await this.reload() //das ergebnis dieser funktion wird gewatched, wenn es sich ändern dann wird jahr upgedated mit this.reload()
-        }, 300);    
-    
+      if (this.timeoutId) {
+        //wenn timeoutId vorhanden ist, dann wird der timeout time zurückgesetzt und die timoutId auf null gesetzt.
+        clearTimeout(this.timeoutId);
+        this.timeoutId = null;
+      }
+      this.timeoutId = setTimeout(async () => {
+        // setTimeout evaluiert das ergebnis der funktion nach xxx millisekunden. d.h. this.reload() wird dann aufgerufen.
+        await this.reload(); //das ergebnis dieser funktion wird gewatched, wenn es sich ändern dann wird jahr upgedated mit this.reload()
+      }, 300);
+
       this.$store.dispatch("updateJahr", this.jahr); //das ergebnis dieser funktion wird gewatched
-    }
+    },
   },
   components: {
     produktItem,
@@ -131,8 +157,10 @@ export default {
       newKalkulierteKosten: {},
       kalkulierteKostenItem: {},
       produkteList: [],
-      kalkulierteKostenList: []
-    }
+      kalkulierteKostenList: [],
+      newJSON: 'Datum: 05 September 2020; Beträge mit Punkt: 876.34',
+      selectDB: "Datenbankname eintragen",
+    };
   },
   async mounted() {
     //load current year into store
@@ -140,12 +168,12 @@ export default {
 
     axios
       .get("/api/produkte")
-      .then(response => (this.produktList = response.data))
-      .catch(error => console.log(error));
+      .then((response) => (this.produktList = response.data))
+      .catch((error) => console.log(error));
     /*         .then(response => (this.produktList = response.data))
         .then(response => (this.jahreskennzahlItem = response.data)) */
 
-   // this.reload()
+    // this.reload()
   },
   computed: {
     jahr: {
@@ -155,11 +183,11 @@ export default {
       },
       set(value) {
         this.$store.commit("updateJahr", value);
-      }
-    }
+      },
+    },
   },
   methods: {
-      /* reload() {
+    /* reload() {
         for (let i = 0; i < this.bFormOptionsKalkulierteKosten.length; i++){
           const response =  api.get(`/kalkulierteKosten/newest?namekosten=${this.bFormOptionsKalkulierteKosten[i]}`)
           console.log(response)
@@ -168,14 +196,19 @@ export default {
         console.log(this.kalkulierteKostenList)
         this.$store.dispatch("updateKalkulierteKosten", this.kalkulierteKostenList)
     }, */
-     async reload() {
+    async reload() {
       try {
-        for (let i = 0; i < this.bFormOptionsKalkulierteKosten.length; i++){
-          const response = await api.get(`/kalkulierteKosten/newest?namekosten=${this.bFormOptionsKalkulierteKosten[i]}`)
+        for (let i = 0; i < this.bFormOptionsKalkulierteKosten.length; i++) {
+          const response = await api.get(
+            `/kalkulierteKosten/newest?namekosten=${this.bFormOptionsKalkulierteKosten[i]}`
+          );
           this.kalkulierteKostenList.push(response.data[0])
         }
-        this.$store.dispatch("updateKalkulierteKosten", this.kalkulierteKostenList)
-/* 
+        this.$store.dispatch(
+          "updateKalkulierteKosten",
+          this.kalkulierteKostenList
+        )
+        /* 
         // Write total to DB if changed (not functioning yet)
         const totalDb = await api.get(`/calculateResults?kostenleistung=total`)
         const totalStoreArray = []
@@ -190,18 +223,17 @@ export default {
             this.totalFromStore.get
           )
         } */
-
       } catch (err) {
         console.log(err);
       }
-    }, 
+    },
     async submit() {
       const res = await api.post(
         `/kalkulierteKosten`,
         this.newKalkulierteKosten
-      )
-      this.submitKalkulierteKosten()
-      if (res.status === 200) await this.reload()
+      );
+      this.submitKalkulierteKosten();
+      if (res.status === 200) await this.reload();
     },
     async removeItem(id) {
       const res = await api.delete(`/kalkulierteKosten/${id}`);
@@ -228,8 +260,11 @@ export default {
       /* const totalCurrentYear = total.filter(
         (item) => item.jahr === this.$store.getters.jahr
       ) */
-      this.$store.dispatch("updateKalkulierteKosten", this.kalkulierteKostenList);
-     /*  total.forEach(async (item) => {
+      this.$store.dispatch(
+        "updateKalkulierteKosten",
+        this.kalkulierteKostenList
+      );
+      /*  total.forEach(async (item) => {
         const res = api.post(`/kalkulierteKosten`, item);
         if (res.status === 200) await this.reload();
       }) */
@@ -261,10 +296,41 @@ export default {
         container["sonstige"] = 0;
         return container;
       });
-      console.log(kalkulierteKostenListYear)
+      console.log(kalkulierteKostenListYear);
       return kalkulierteKostenListYear;
+    },
+    submitJson() {
+      //const config = {
+        //delimiter: ';',	// auto-detect
+        //newline: ''	// auto-detect 
+       // }
+      const newJsonParsedObject = this.$papa.parse(this.newJSON)
+      const newJsonParsed = newJsonParsedObject.data
+      console.log(newJsonParsed)
+
+      //create array of objects
+      let newJsonArrayOfObjects = []
+      for (let i = 1; i < newJsonParsed.length; i++){ 
+        let obj = {}
+        const keys = newJsonParsed[0]
+        const values = newJsonParsed[i]
+        for (let j = 0; j < keys.length; j++) {
+          obj[keys[j]] = values[j]
+        }
+        newJsonArrayOfObjects.push(obj)  
+      }
+      this.submitJsonAxios(newJsonArrayOfObjects)
+      //submit array of objects to axios
+      
+      
+      
+    },
+    async submitJsonAxios (arr) {
+        for (let i = 0; i < arr.length; i++) {
+          api.post(`/${this.selectDB}`, arr[i])
+      } 
     }
-  }
+  },
 };
 </script>
 

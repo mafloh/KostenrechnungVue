@@ -9,15 +9,15 @@ const personalSchema = new mongoose.Schema({
     },
     abDatum: {
         type: Date,
-        required: true
+        //required: true
     },
     bisDatum: {
         type: Date,
-        required: true
+        //required: true
     },
     lohnGesamtProMonat: {
         type: Number,
-        required: true
+        //required: true
     },
     prozentWeb: {
         type: Number
