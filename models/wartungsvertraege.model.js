@@ -30,13 +30,13 @@ const wartungsvertraegeSchema = new mongoose.Schema({
         type: Number
     },
     ASP: {
-        type: Boolean
+        type: String
     },
     info: {
         type: String
     },
     individualKaufAnwendung: {
-        type: Boolean
+        type: String
     },
     individualStrassendatenbereich: {
         type: String
@@ -45,10 +45,10 @@ const wartungsvertraegeSchema = new mongoose.Schema({
         type: Number
     },
     schuelerASPKDO:{
-        type: Boolean
+        type: String
     },
     schuelerEigenerServer: {
-        type: Boolean
+        type: String
     },
     schuelerStart4Punkt0: {
         type: Date
