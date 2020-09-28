@@ -1,24 +1,16 @@
 <template>
-<div>
-    <li> 
-       <h3 > {{ produkt.name }} : {{ this.$store.getters.wartungsvertraege[0][produkt.name] + this.$store.getters.extraEinnahmen[0][produkt.name] - (this.$store.getters.personal[0][produkt.name])}} </h3>
-        
-        
-        
-        <jahreskennzahlItem 
-            v-bind:name="produkt.name"
-            v-bind:calculate-results="calculateResults"
-            ></jahreskennzahlItem>
-        
-    </li> 
-  
-  
-</div>
+  <div>
+    <li>
+      <h3>{{ produkt.name }} : {{ this.$store.getters.wartungsvertraege[0][produkt.name] + this.$store.getters.extraEinnahmen[0][produkt.name] - (this.$store.getters.personal[0][produkt.name])*1.13}}</h3>
+
+      <jahreskennzahlItem v-bind:name="produkt.name" v-bind:calculate-results="calculateResults"></jahreskennzahlItem>
+    </li>
+  </div>
 </template>
 
 <script>
 import jahreskennzahlItem from './jahreskennzahl.vue'
-import axios from 'axios'
+import api from "../api.js"
 //import {store} from "../store/index.js";
 
 
@@ -44,29 +36,13 @@ export default {
         } */
     },
     methods: {
-        reload () { //so functions schreiben ist shorthand
-            //this.jahreskennzahl = this.reloadArray(this.jahreskennzahl)
-           
-        
-        
-
-        let produkte = '/api/produkte'
-        //let calculateResults = `ÖÖÖhttp://localhost:5000/api/calculateResults?jahr=${this.$store.getters.jahr}`
-
-        const requestProdukte = axios.get(produkte)
-        //const requestCalculateResults = axios.get(calculateResults)
-        
-        axios.all([requestProdukte])
-        .then(axios.spread((...responses) => {
-            this.produktList = responses[0].data
-            //this.calculateResults = responses[1].data
-            
-            
-        }
-        )).catch(error => console.log(error))
-
-        
-        
+        async reload () { 
+            try {
+                const response = await api.get("/produkte");
+                this.produkteList = response.data;
+            } catch (err) {
+                console.log(err);
+            }
         }
     },
     watch: {
@@ -83,15 +59,10 @@ export default {
 
 <style scoped>
 ul {
-    color:blue;
-    padding-left: 0;
-    
-    align-items: left;
-    list-style: none;
+  color: blue;
+  padding-left: 0;
 
-    
+  align-items: left;
+  list-style: none;
 }
-
-
-
 </style>

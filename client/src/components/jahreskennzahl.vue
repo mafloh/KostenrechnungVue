@@ -1,13 +1,13 @@
 <template>
   <div>
     <li
-      
+      v-if="this.$store.getters.extraEinnahmen.length && this.$store.getters.wartungsvertraege.length && this.$store.getters.personal.length && this.$store.getters.kalkulierteKosten.length"
     >
       <!-- <li v-if="name === produkt_id"> -->
       <!-- v-if: name und produkt_id(props die mit v-bind(doppelpunkt ist shorthand) vom produkte.vue kommt) -->
       <ul class="leistungen">Wartungsverträge: {{ this.$store.getters.wartungsvertraege[0][name] }}</ul>
       <ul class="leistungen">Extra Einnahmen: {{ this.$store.getters.extraEinnahmen[0][name] }}</ul>
-      <ul class="kosten">Personal (+ 13%): {{ this.$store.getters.personal[0][name] }}</ul>
+      <ul class="kosten">Personal (+ 13%): {{ this.$store.getters.personal[0][name] * 1.13 }}</ul>
       <ul> <br></ul>
       <ul class="annotation">Basierend auf 2019 kalkuliert:</ul>
       <ul class="kosten" v-for="item in itemsKalkulierteKosten" :key="item._id">

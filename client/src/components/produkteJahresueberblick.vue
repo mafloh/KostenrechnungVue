@@ -1,8 +1,12 @@
 <template>
   <div id="produktJahresueberblick">
     <hr />
-    <!-- <ul v-if="this.$store.getters.extraEinnahmen.length && this.$store.getters.wartungsvertraege.length && this.$store.getters.personal.length && this.$store.getters.kalkulierteKosten.length"> -->
-      <ul>
+    {{this.$store.getters.wartungsvertraege[0][terraSchüler]}}
+    {{this.$store.getters.wartungsvertraege[0][terraWeb]}}
+    test
+    <ul
+      v-if="this.$store.getters.extraEinnahmen.length && this.$store.getters.wartungsvertraege.length && this.$store.getters.personal.length && this.$store.getters.kalkulierteKosten.length"
+    >
       <produkt-item
         v-for="item in produktList"
         v-bind:produkt="item"
@@ -103,10 +107,9 @@
 </template>
 
 <script>
-import produktItem from "./produkt.vue"
+import produktItem from "./produkt.vue";
 //import jahreskennzahlItem from "./jahreskennzahl.vue"
-import axios from "axios"
-import api from "../api.js"
+import api from "../api.js";
 //import api from "../api.js";
 //import {store} from '../store/index.js'
 
@@ -127,7 +130,7 @@ export default {
       }, 300);
 
       this.$store.dispatch("updateJahr", this.jahr); //das ergebnis dieser funktion wird gewatched
-    },
+    }
   },
   components: {
     produktItem,
@@ -160,7 +163,7 @@ export default {
       kalkulierteKostenItem: {},
       produkteList: [],
       kalkulierteKostenList: [],
-      newJSON: 'Datum: 05 September 2020; Beträge mit Punkt: 876.34',
+      newJSON: "Datum: 05 September 2020; Beträge mit Punkt: 876.34",
       selectDB: "Datenbankname eintragen",
     };
   },
@@ -168,14 +171,12 @@ export default {
     //load current year into store
     this.$store.dispatch("updateJahr", this.jahrCurrent);
 
-    axios
-      .get("/api/produkte")
-      .then((response) => (this.produktList = response.data))
-      .catch((error) => console.log(error));
-    /*         .then(response => (this.produktList = response.data))
-        .then(response => (this.jahreskennzahlItem = response.data)) */
-
-    // this.reload()
+    try {
+      const response = await api.get("/produkte");
+      this.produkteList = response.data;
+    } catch (err) {
+      console.log(err);
+    }
   },
   computed: {
     jahr: {
@@ -204,12 +205,12 @@ export default {
           const response = await api.get(
             `/kalkulierteKosten/newest?namekosten=${this.bFormOptionsKalkulierteKosten[i]}`
           );
-          this.kalkulierteKostenList.push(response.data[0])
+          this.kalkulierteKostenList.push(response.data[0]);
         }
         this.$store.dispatch(
           "updateKalkulierteKosten",
           this.kalkulierteKostenList
-        )
+        );
         /* 
         // Write total to DB if changed (not functioning yet)
         const totalDb = await api.get(`/calculateResults?kostenleistung=total`)
@@ -303,35 +304,32 @@ export default {
     },
     submitJson() {
       //const config = {
-        //delimiter: ';',	// auto-detect
-        //newline: ''	// auto-detect 
-       // }
-      const newJsonParsedObject = this.$papa.parse(this.newJSON)
-      const newJsonParsed = newJsonParsedObject.data
-      console.log(newJsonParsed)
+      //delimiter: ';',	// auto-detect
+      //newline: ''	// auto-detect
+      // }
+      const newJsonParsedObject = this.$papa.parse(this.newJSON);
+      const newJsonParsed = newJsonParsedObject.data;
+      console.log(newJsonParsed);
 
       //create array of objects
-      let newJsonArrayOfObjects = []
-      for (let i = 1; i < newJsonParsed.length; i++){ 
-        let obj = {}
-        const keys = newJsonParsed[0]
-        const values = newJsonParsed[i]
+      let newJsonArrayOfObjects = [];
+      for (let i = 1; i < newJsonParsed.length; i++) {
+        let obj = {};
+        const keys = newJsonParsed[0];
+        const values = newJsonParsed[i];
         for (let j = 0; j < keys.length; j++) {
-          obj[keys[j]] = values[j]
+          obj[keys[j]] = values[j];
         }
-        newJsonArrayOfObjects.push(obj)  
+        newJsonArrayOfObjects.push(obj);
       }
-      this.submitJsonAxios(newJsonArrayOfObjects)
+      this.submitJsonAxios(newJsonArrayOfObjects);
       //submit array of objects to axios
-      
-      
-      
     },
-    async submitJsonAxios (arr) {
-        for (let i = 0; i < arr.length; i++) {
-          api.post(`/${this.selectDB}`, arr[i])
-      } 
-    }
+    async submitJsonAxios(arr) {
+      for (let i = 0; i < arr.length; i++) {
+        api.post(`/${this.selectDB}`, arr[i]);
+      }
+    },
   },
 };
 </script>

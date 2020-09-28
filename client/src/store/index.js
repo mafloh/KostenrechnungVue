@@ -49,7 +49,7 @@ export default new Vuex.Store ({
         jahr: (state) => state.form.jahr,
         extraEinnahmen: (state) => state.calculateResults.extraEinnahmen,
         wartungsvertraege: (state) => state.calculateResults.wartungsvertraege,
-        personal: (state) => state.calculateResults.personal * 1.13,
+        personal: (state) => state.calculateResults.personal,
         kalkulierteKosten: (state) => state.kalkulierteKosten.kalkulierteKosten
     },
     modules: {}
