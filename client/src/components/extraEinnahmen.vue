@@ -52,7 +52,7 @@
           </b-th>
 
           <b-th>
-            <b-btn v-b-modal.modal-extra-einnahmen variant="info" :key="index" @click.prevent="loadItem(data._id)">Edit</b-btn>
+            <b-btn v-b-modal.modal-extra-einnahmen variant="info" :key="index" @click.prevent="loadItem(data._id)" size="sm">Edit</b-btn>
           </b-th>
         </b-tr>
 

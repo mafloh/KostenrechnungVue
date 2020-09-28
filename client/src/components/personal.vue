@@ -79,6 +79,7 @@
               variant="info"
               :key="index"
               @click.prevent="loadItem(data._id)"
+               size="sm"
             >Edit</b-btn>
           </b-th>
         </b-tr>

@@ -96,6 +96,7 @@
 
       <b-btn v-b-modal.modal-kalkulierte-kosten variant="light" size="sm">Kalkulierte Kosten ändern</b-btn>
       <b-btn v-b-modal.modal-json-importieren variant="light" size="sm">JSON importieren</b-btn>
+      <b-btn @click="reload()" variant="light" size="sm">reload</b-btn>
     </div>
   </div>
 </template>

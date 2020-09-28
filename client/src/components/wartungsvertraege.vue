@@ -42,7 +42,7 @@
                 </b-th>
 
                 <b-th>
-                    <b-btn v-b-modal.wartungsvertraege-terra-schueler variant="info" :key="index" @click.prevent="loadItem(item._id)">Edit</b-btn>
+                    <b-btn v-b-modal.wartungsvertraege-terra-schueler variant="info" :key="index" @click.prevent="loadItem(item._id)" size="sm">Edit</b-btn>
                 </b-th>
 
             </b-tr>
@@ -104,7 +104,7 @@
                 </b-th>
 
                 <b-th>
-                    <b-btn v-b-modal.wartungsvertraege-terra-individual variant="info" :key="index" @click.prevent="loadItem(item._id)">Edit</b-btn>
+                    <b-btn v-b-modal.wartungsvertraege-terra-individual variant="info" :key="index" @click.prevent="loadItem(item._id)" size="sm">Edit</b-btn>
                 </b-th>
 
             </b-tr>
@@ -166,7 +166,7 @@
                 </b-th>
 
                 <b-th>
-                    <b-btn v-b-modal.wartungsvertraege-terra-web variant="info" :key="index" @click.prevent="loadItem(item._id)">Edit</b-btn>
+                    <b-btn v-b-modal.wartungsvertraege-terra-web variant="info" :key="index" @click.prevent="loadItem(item._id)" size="sm">Edit</b-btn>
                 </b-th>
 
             </b-tr>
