@@ -7,7 +7,7 @@
       <!-- v-if: name und produkt_id(props die mit v-bind(doppelpunkt ist shorthand) vom produkte.vue kommt) -->
       <ul class="leistungen">Wartungsverträge: {{ this.$store.getters.wartungsvertraege[0][name] }}</ul>
       <ul class="leistungen">Extra Einnahmen: {{ this.$store.getters.extraEinnahmen[0][name] }}</ul>
-      <ul class="kosten">Personal: {{ this.$store.getters.personal[0][name] }}</ul>
+      <ul class="kosten">Personal (+ 13%): {{ this.$store.getters.personal[0][name] }}</ul>
       <ul> <br></ul>
       <ul class="annotation">Basierend auf 2019 kalkuliert:</ul>
       <ul class="kosten" v-for="item in itemsKalkulierteKosten" :key="item._id">

@@ -1,7 +1,7 @@
 <template>
 <div>
     <li> 
-       <h3  v-if="this.$store.getters.extraEinnahmen.length && this.$store.getters.wartungsvertraege.length && this.$store.getters.personal.length && this.$store.getters.kalkulierteKosten.length"> {{ produkt.name }} : {{ this.$store.getters.wartungsvertraege[0][produkt.name] + this.$store.getters.extraEinnahmen[0][produkt.name] - this.$store.getters.personal[0][produkt.name]}} </h3>
+       <h3  v-if="this.$store.getters.extraEinnahmen.length && this.$store.getters.wartungsvertraege.length && this.$store.getters.personal.length && this.$store.getters.kalkulierteKosten.length"> {{ produkt.name }} : {{ this.$store.getters.wartungsvertraege[0][produkt.name] + this.$store.getters.extraEinnahmen[0][produkt.name] - (this.$store.getters.personal[0][produkt.name])}} </h3>
         
         
         

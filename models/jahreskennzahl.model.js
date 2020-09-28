@@ -9,15 +9,19 @@ const jahreskennzahlenSchema = new mongoose.Schema({
     },
     terraWeb: {
         type: Number,
+        default: 0
     },
     terraIndividual: {
         type: Number,
+        default: 0
     },
     terraSchüler: {
         type: Number,
+        default: 0
     },
     sonstige: {
-        type: Number
+        type: Number,
+        default: 0
     }
 })
 

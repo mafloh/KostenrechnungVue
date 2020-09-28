@@ -5,16 +5,20 @@ const kalkulierteKostenSchema = new mongoose.Schema({
         type: String
     },    
     terraWeb: {
-        type: Number
+        type: Number,
+        default: 0
     },
     terraIndividual: {
-        type: Number
+        type: Number,
+        default: 0
     },
     terraSchüler: {
-        type: Number
+        type: Number,
+        default: 0
     },
     sonstige: {
-        type: Number
+        type: Number,
+        default: 0
     }
 })
 

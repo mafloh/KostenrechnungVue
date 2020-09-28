@@ -17,16 +17,20 @@ const personalSchema = new mongoose.Schema({
     },
     lohnGesamtProMonat: {
         type: Number,
+        default: 0
         //required: true
     },
     prozentWeb: {
-        type: Number
+        type: Number,
+        default: 0
     },
     prozentSchueler: {
-        type: Number
+        type: Number,
+        default: 0
     },
     prozentIndividual: {
-        type: Number
+        type: Number,
+        default: 0
     },
 })
 

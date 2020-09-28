@@ -18,13 +18,16 @@ const wartungsvertraegeSchema = new mongoose.Schema({
         default: 'fix'
     },
     proMonat: {
-        type: Number
+        type: Number,
+        default: 0
     },
     einmaligeZahlung: {
-        type: Number
+        type: Number,
+        default: 0
     },
     jahreswartung: {
-        type: Number
+        type: Number,
+        default: 0
     },
     idLexware: {
         type: Number
@@ -42,7 +45,8 @@ const wartungsvertraegeSchema = new mongoose.Schema({
         type: String
     },
     individualStrassendatenProMonat: {
-        type: Number
+        type: Number,
+        default: 0
     },
     schuelerASPKDO:{
         type: String

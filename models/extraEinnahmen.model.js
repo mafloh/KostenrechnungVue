@@ -22,7 +22,8 @@ const extraEinnahmenSchema = new mongoose.Schema({
     },
     preis: {
         type: Number,
-        required: true
+        required: true,
+        default: 0
     },
     verantwortlich: {
         type: String
