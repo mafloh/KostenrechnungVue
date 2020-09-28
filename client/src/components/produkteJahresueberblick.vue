@@ -1,7 +1,8 @@
 <template>
   <div id="produktJahresueberblick">
     <hr />
-    <ul v-if="this.$store.getters.extraEinnahmen.length && this.$store.getters.wartungsvertraege.length && this.$store.getters.personal.length && this.$store.getters.kalkulierteKosten.length">
+    <!-- <ul v-if="this.$store.getters.extraEinnahmen.length && this.$store.getters.wartungsvertraege.length && this.$store.getters.personal.length && this.$store.getters.kalkulierteKosten.length"> -->
+      <ul>
       <produkt-item
         v-for="item in produktList"
         v-bind:produkt="item"
