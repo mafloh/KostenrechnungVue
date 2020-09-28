@@ -103,7 +103,6 @@
 <script>
 import produktItem from "./produkt.vue"
 //import jahreskennzahlItem from "./jahreskennzahl.vue"
-import axios from "axios"
 import api from "../api.js"
 //import api from "../api.js";
 //import {store} from '../store/index.js'
@@ -159,21 +158,19 @@ export default {
       produkteList: [],
       kalkulierteKostenList: [],
       newJSON: 'Datum: 05 September 2020; Beträge mit Punkt: 876.34',
-      selectDB: "Datenbankname eintragen",
+      selectDB: 'Datenbankname eintragen',
     };
   },
   async mounted() {
     //load current year into store
     this.$store.dispatch("updateJahr", this.jahrCurrent);
 
-    axios
-      .get("/api/produkte")
-      .then((response) => (this.produktList = response.data))
-      .catch((error) => console.log(error));
-    /*         .then(response => (this.produktList = response.data))
-        .then(response => (this.jahreskennzahlItem = response.data)) */
-
-    // this.reload()
+    try {
+        const response = await api.get("/produkte");
+        this.produktList = response.data;
+      } catch (err) {
+        console.log(err)
+      }
   },
   computed: {
     jahr: {
