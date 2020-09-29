@@ -1,9 +1,9 @@
 <template>
     <div> 
-<h3 style="text-align: center; padding: 0 0 7px 0">Terraplan Kostenrechnung 2020</h3>
+<h3 style="text-align: center; padding: 0 0 7px 0">Kostenrechnung 2020</h3>
         <produkte-jahresueberblick></produkte-jahresueberblick>
-        <personal></personal>
         <extraEinnahmen></extraEinnahmen>
+        <personal></personal>
         <wartungsvertraege></wartungsvertraege>
         
     </div>
