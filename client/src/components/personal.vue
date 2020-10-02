@@ -198,6 +198,7 @@ export default {
         if (res.status === 200) await this.reload()
       })
     },
+    
     submitCalculateResultToStore(array) {
       const total = this.totalPersonal(array)
       const totalCurrentYear = total.filter(item => item.jahr === this.$store.getters.jahr)

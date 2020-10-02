@@ -163,6 +163,7 @@
                     {{ new Date(item[field.key]).toLocaleDateString() }}
                      </span>
                     <span v-else>{{item[field.key]}}</span>
+                    
                 </b-th>
 
                 <b-th>

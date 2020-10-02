@@ -8,6 +8,7 @@
       <jahreskennzahlItem v-bind:name="produkt.name" v-bind:calculate-results="calculateResults"></jahreskennzahlItem>
     </li>
   </div>
+  
 </template>
 
 <script>

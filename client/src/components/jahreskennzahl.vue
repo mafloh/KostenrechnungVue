@@ -86,6 +86,7 @@ export default {
 };
 </script>
 
+
 <style scoped>
 ul {
   padding-left: 0;
