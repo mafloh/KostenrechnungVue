@@ -109,7 +109,7 @@
 <script>
 import produktItem from "./produkt.vue";
 //import jahreskennzahlItem from "./jahreskennzahl.vue"
-import api from "../api.js";
+import api from "../api.js"
 //import api from "../api.js";
 //import {store} from '../store/index.js'
 
@@ -163,8 +163,8 @@ export default {
       kalkulierteKostenItem: {},
       produkteList: [],
       kalkulierteKostenList: [],
-      newJSON: "Datum: 05 September 2020; Beträge mit Punkt: 876.34",
-      selectDB: "Datenbankname eintragen",
+      newJSON: 'Datum: 05 September 2020; Beträge mit Punkt: 876.34',
+      selectDB: 'Datenbankname eintragen',
     };
   },
   async mounted() {
