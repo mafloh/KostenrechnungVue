@@ -1,13 +1,7 @@
 <template>
   <div id="produktJahresueberblick">
     <hr />
-    {{this.$store.getters.wartungsvertraege[0][terraSchüler]}}
-    {{this.$store.getters.wartungsvertraege[0][terraWeb]}}
-    test
-    <ul
-      v-if="this.$store.getters.extraEinnahmen.length && this.$store.getters.wartungsvertraege.length && this.$store.getters.personal.length && this.$store.getters.kalkulierteKosten.length"
-    >
-    
+    <ul v-if="this.$store.getters.extraEinnahmen.length && this.$store.getters.wartungsvertraege.length && this.$store.getters.personal.length && this.$store.getters.kalkulierteKosten.length">
       <produkt-item
         v-for="item in produktList"
         v-bind:produkt="item"
@@ -102,13 +96,12 @@
 
       <b-btn v-b-modal.modal-kalkulierte-kosten variant="light" size="sm">Kalkulierte Kosten ändern</b-btn>
       <b-btn v-b-modal.modal-json-importieren variant="light" size="sm">JSON importieren</b-btn>
-      <b-btn @click="reload()" variant="light" size="sm">reload</b-btn>
     </div>
   </div>
 </template>
 
 <script>
-import produktItem from "./produkt.vue";
+import produktItem from "./produkt.vue"
 //import jahreskennzahlItem from "./jahreskennzahl.vue"
 import api from "../api.js"
 //import api from "../api.js";
@@ -131,7 +124,7 @@ export default {
       }, 300);
 
       this.$store.dispatch("updateJahr", this.jahr); //das ergebnis dieser funktion wird gewatched
-    }
+    },
   },
   components: {
     produktItem,
@@ -173,11 +166,11 @@ export default {
     this.$store.dispatch("updateJahr", this.jahrCurrent);
 
     try {
-      const response = await api.get("/produkte");
-      this.produkteList = response.data;
-    } catch (err) {
-      console.log(err);
-    }
+        const response = await api.get("/produkte");
+        this.produktList = response.data;
+      } catch (err) {
+        console.log(err)
+      }
   },
   computed: {
     jahr: {
@@ -206,12 +199,12 @@ export default {
           const response = await api.get(
             `/kalkulierteKosten/newest?namekosten=${this.bFormOptionsKalkulierteKosten[i]}`
           );
-          this.kalkulierteKostenList.push(response.data[0]);
+          this.kalkulierteKostenList.push(response.data[0])
         }
         this.$store.dispatch(
           "updateKalkulierteKosten",
           this.kalkulierteKostenList
-        );
+        )
         /* 
         // Write total to DB if changed (not functioning yet)
         const totalDb = await api.get(`/calculateResults?kostenleistung=total`)
@@ -305,32 +298,35 @@ export default {
     },
     submitJson() {
       //const config = {
-      //delimiter: ';',	// auto-detect
-      //newline: ''	// auto-detect
-      // }
-      const newJsonParsedObject = this.$papa.parse(this.newJSON);
-      const newJsonParsed = newJsonParsedObject.data;
-      console.log(newJsonParsed);
+        //delimiter: ';',	// auto-detect
+        //newline: ''	// auto-detect 
+       // }
+      const newJsonParsedObject = this.$papa.parse(this.newJSON)
+      const newJsonParsed = newJsonParsedObject.data
+      console.log(newJsonParsed)
 
       //create array of objects
-      let newJsonArrayOfObjects = [];
-      for (let i = 1; i < newJsonParsed.length; i++) {
-        let obj = {};
-        const keys = newJsonParsed[0];
-        const values = newJsonParsed[i];
+      let newJsonArrayOfObjects = []
+      for (let i = 1; i < newJsonParsed.length; i++){ 
+        let obj = {}
+        const keys = newJsonParsed[0]
+        const values = newJsonParsed[i]
         for (let j = 0; j < keys.length; j++) {
-          obj[keys[j]] = values[j];
+          obj[keys[j]] = values[j]
         }
-        newJsonArrayOfObjects.push(obj);
+        newJsonArrayOfObjects.push(obj)  
       }
-      this.submitJsonAxios(newJsonArrayOfObjects);
+      this.submitJsonAxios(newJsonArrayOfObjects)
       //submit array of objects to axios
+      
+      
+      
     },
-    async submitJsonAxios(arr) {
-      for (let i = 0; i < arr.length; i++) {
-        api.post(`/${this.selectDB}`, arr[i]);
-      }
-    },
+    async submitJsonAxios (arr) {
+        for (let i = 0; i < arr.length; i++) {
+          api.post(`/${this.selectDB}`, arr[i])
+      } 
+    }
   },
 };
 </script>
