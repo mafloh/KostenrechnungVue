@@ -44,7 +44,7 @@ export default {
       }
     },
     formatNumber (nr) {
-      return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(nr)
+      return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumSignificantDigits: 0 }).format(nr)
     }
   },
   watch: {
