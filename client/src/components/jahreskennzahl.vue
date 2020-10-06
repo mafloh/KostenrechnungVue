@@ -11,7 +11,7 @@
       <ul> <br></ul>
       <ul class="annotation">Basierend auf 2019 kalkuliert:</ul>
       <ul class="kosten" v-for="item in itemsKalkulierteKosten" :key="item._id">
-        {{ item.nameKosten + ": " + item[name] }}
+        {{ item.nameKosten + ": " + formatNumber(item[name]) }}
       </ul> 
 
       
@@ -52,10 +52,7 @@ export default {
       get() {
         return this.$store.getters.kalkulierteKosten
       }
-    },
-    formatNumber (nr) {
-      return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumSignificantDigits: 1 }).format(nr)
-    } 
+    }
 
     /* ,
         extraEinnahmenResultsProdukt:  function () {
@@ -78,7 +75,9 @@ export default {
     calculateResults: Object,
   },
   methods: {
-    
+    formatNumber (nr) {
+      return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumSignificantDigits: 1 }).format(nr)
+    } 
   },
   async mounted() {
     api
