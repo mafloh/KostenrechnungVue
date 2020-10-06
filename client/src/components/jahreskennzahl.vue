@@ -11,7 +11,7 @@
       <ul> <br></ul>
       <ul class="annotation">Basierend auf 2019 kalkuliert:</ul>
       <ul class="kosten" v-for="item in itemsKalkulierteKosten" :key="item._id">
-        {{ item.nameKosten + ": " + formatNumber(item[name]) }}
+        {{ item.nameKosten + ": " + item[name] }}
       </ul> 
 
       
