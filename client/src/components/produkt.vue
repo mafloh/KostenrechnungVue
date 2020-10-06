@@ -44,8 +44,7 @@ export default {
       }
     },
     formatNumber (nr) {
-      nr.toFixed(0)
-      return nr
+      return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(nr)
     }
   },
   watch: {
