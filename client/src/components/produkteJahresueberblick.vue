@@ -205,6 +205,11 @@ export default {
           "updateKalkulierteKosten",
           this.kalkulierteKostenList
         )
+        //get calculateResults
+        const response = await api
+          .get('/calculateResults')
+        this.calculateResultsApi = response.data
+
         /* 
         // Write total to DB if changed (not functioning yet)
         const totalDb = await api.get(`/calculateResults?kostenleistung=total`)
