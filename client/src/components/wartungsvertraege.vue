@@ -318,7 +318,7 @@ export default {
         //this.$emit('updateprodukte')
         //console.log("updateprodukte")
       },
-      submitCalculateResultToStore(array) {
+      async submitCalculateResultToStore(array) {
         const response = await api
          .get('/wartungsvertraege')
         this.wartungsvertraegeList = response.data

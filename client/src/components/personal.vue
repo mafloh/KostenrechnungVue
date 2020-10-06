@@ -199,7 +199,7 @@ export default {
       })
     },
     
-    submitCalculateResultToStore(array) {
+    async submitCalculateResultToStore(array) {
       const response = await api.get("/personal");
       this.personalList = response.data;
       const total = this.totalPersonal(array)
