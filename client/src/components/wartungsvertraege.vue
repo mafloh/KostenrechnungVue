@@ -319,6 +319,9 @@ export default {
         //console.log("updateprodukte")
       },
       submitCalculateResultToStore(array) {
+        const response = await api
+         .get('/wartungsvertraege')
+        this.wartungsvertraegeList = response.data
         const total = this.totalWartungsvertraege(array)
         const totalCurrentYear = total.filter(item => item.jahr === this.$store.getters.jahr)
         //console.log(totalCurrentYear)
