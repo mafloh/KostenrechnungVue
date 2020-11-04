@@ -9,7 +9,8 @@ export default new Vuex.Store ({
     state: {
        form: {jahr: null},
        calculateResults: {extraEinnahmen: {}, wartungsvertraege: {}, personal: {}},
-       kalkulierteKosten: {kalkulierteKosten: {}}
+       kalkulierteKosten: {kalkulierteKosten: {}},
+       login: {password: ''}
     },
     mutations: {
         updateJahr (state, value) {
@@ -26,6 +27,17 @@ export default new Vuex.Store ({
         },
         updateKalkulierteKosten (state, value) {
             state.kalkulierteKosten.kalkulierteKosten = value
+        },
+        updatePassword (state, value) {
+            localStorage.setItem('password', value)
+            if (value === 'rennrad') {
+                state.login.password = value
+            }
+        },
+        initialiseStore(state) {
+            if (localStorage.getItem('password')) {
+              state.login.password = 'rennrad'
+            }
         }
     },
     actions: {
@@ -43,6 +55,9 @@ export default new Vuex.Store ({
         },
         updateKalkulierteKosten (context, value) {
             context.commit('updateKalkulierteKosten', value)
+        },
+        updatePassword (context, value) {
+            context.commit('updatePassword', value)
         }
     },
     getters: {
@@ -50,7 +65,8 @@ export default new Vuex.Store ({
         extraEinnahmen: (state) => state.calculateResults.extraEinnahmen,
         wartungsvertraege: (state) => state.calculateResults.wartungsvertraege,
         personal: (state) => state.calculateResults.personal,
-        kalkulierteKosten: (state) => state.kalkulierteKosten.kalkulierteKosten
+        kalkulierteKosten: (state) => state.kalkulierteKosten.kalkulierteKosten,
+        password: (state) => state.login.password
     },
     modules: {}
 

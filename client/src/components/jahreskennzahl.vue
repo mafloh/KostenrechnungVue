@@ -76,8 +76,9 @@ export default {
   },
   methods: {
     formatNumber (nr) {
-      return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR'}).format(nr)
-    } 
+      const nrRounded = Math.round(nr)
+      return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR'}).format(nrRounded)
+    }
   },
   async mounted() {
     api
