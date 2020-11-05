@@ -41,7 +41,7 @@ const db = mongoose.connection
 db.on('error', error => console.error(error))
 db.once('open', () => console.log('Connected to Mongoose'))
 
-const port = process.env.PORT || 80
+const port = process.env.PORT || 5000
 
 //Routes
 app.use('/api/produkte', produkteRouter)
