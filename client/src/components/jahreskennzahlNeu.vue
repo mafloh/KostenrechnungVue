@@ -53,6 +53,7 @@ export default {
     return {
       calculateResults: {},
       loadingExtraEinnahmen: false,
+      kostenleistungenAlle: ['extraEinnahmen', 'personal', 'wartungsvertraege']
     };
   },
   computed: {
@@ -73,11 +74,23 @@ export default {
     //calculateResults: Object,
   },
   methods: {
+      async loadCalculateResultsForSeveralYears() {
+          console.log('test')
+        for (let i = 2020; i < 2022; i++){
+            for (let j = 0; j < this.kostenleistungenAlle.length; j++){
+                await this.loadCalculateResults(i, this.kostenleistungenAlle[j])
+                
+            }
+
+        }
+      },
       async loadCalculateResults(year, kostenleistung) {
           try {
+                if (!this.calculateResults[year]) this.calculateResults[year] = {}
                 const response = await api
                     .get(`/calculateresults?jahr=${year}&kostenleistung=${kostenleistung}`)
                 this.calculateResults[year][kostenleistung] = response.data
+                console.log(response.data)
             } catch(err) {
                 console.log(err)
             }
@@ -85,7 +98,7 @@ export default {
 
   },
   mounted() {
-    this.loadCalculateResults(2020, 'personal')
+    this.loadCalculateResultsForSeveralYears()
   },
 };
 </script>
