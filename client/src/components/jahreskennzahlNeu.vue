@@ -1,6 +1,6 @@
 <template>
   <div>
-    {{ calculateResults }}
+    <b-table striped hover :items="calculateResults"></b-table>
 
     testtestsetse
     <li
@@ -51,16 +51,16 @@ export default {
   name: "jahreskennzahlItem",
   data() {
     return {
-      calculateResults: {},
+      calculateResults: [],
       loadingExtraEinnahmen: false,
-      kostenleistungenAlle: ['extraEinnahmen', 'personal', 'wartungsvertraege']
+      kostenleistungenAlle: ["extraEinnahmen", "personal", "wartungsvertraege"],
     };
   },
   computed: {
     jahr: {
       //hier wird die jahr variable computed, damit es im axios request genutzt werden kann.
       get() {
-        return new Date().getFullYear()
+        return new Date().getFullYear();
       },
     },
     itemsKalkulierteKosten: {
@@ -74,31 +74,38 @@ export default {
     //calculateResults: Object,
   },
   methods: {
-      async loadCalculateResultsForSeveralYears() {
-          console.log('test')
-        for (let i = 2020; i < 2022; i++){
-            for (let j = 0; j < this.kostenleistungenAlle.length; j++){
-                await this.loadCalculateResults(i, this.kostenleistungenAlle[j])
-                
-            }
-
+    async loadCalculateResultsForSeveralYears() {
+      for (let i = 2020; i < 2022; i++) {
+        this.pushToTableArray(i, )
+        for (let j = 0; j < this.kostenleistungenAlle.length; j++) {
+          await this.loadCalculateResults(i, this.kostenleistungenAlle[j]);
         }
-      },
-      async loadCalculateResults(year, kostenleistung) {
-          try {
-                if (!this.calculateResults[year]) this.calculateResults[year] = {}
-                const response = await api
-                    .get(`/calculateresults?jahr=${year}&kostenleistung=${kostenleistung}`)
-                this.calculateResults[year][kostenleistung] = response.data
-                console.log(response.data)
-            } catch(err) {
-                console.log(err)
-            }
-      },
-
+      }
+    },
+    async loadCalculateResults(year, kostenleistung) {
+      try {
+        const response = await api.get(
+          `/calculateresults?jahr=${year}&kostenleistung=${kostenleistung}`
+        );
+        this.pushToTableArray(response.data[0].kostenLeistung, response.data[0].terraWeb, response.data[0].terraSchüler, response.data[0].terraIndividual,response.data[0].sonstige )
+        
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    pushToTableArray(one, two, three, four, five) {
+        let object = {
+          kostenLeistung: one,
+          terraWeb: two,
+          terraSchüler: three,
+          terraIndividual: four,
+          sonstige: five,
+        }
+        this.calculateResults.push(object);
+    }
   },
   mounted() {
-    this.loadCalculateResultsForSeveralYears()
+    this.loadCalculateResultsForSeveralYears();
   },
 };
 </script>
