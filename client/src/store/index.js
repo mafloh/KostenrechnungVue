@@ -7,7 +7,7 @@ export default new Vuex.Store ({
     strict: true,
     
     state: {
-       form: {jahr: null},
+       form: {jahr: 2020},
        calculateResults: {extraEinnahmen: {}, wartungsvertraege: {}, personal: {}},
        kalkulierteKosten: {kalkulierteKosten: {}}
     },
