@@ -1,7 +1,8 @@
 <template>
     <div> 
-<h3 style="text-align: center; padding: 0 0 7px 0">Kostenrechnung 2020</h3>
-        <produkte-jahresueberblick></produkte-jahresueberblick>
+<h3 style="text-align: center; padding: 0 0 7px 0">Kostenrechnung</h3>
+        <jahreskennzahl-neu></jahreskennzahl-neu>
+        
         <extraEinnahmen></extraEinnahmen>
         <personal></personal>
         <wartungsvertraege></wartungsvertraege>
@@ -10,18 +11,19 @@
 </template>
 
 <script>
-import produkteJahresueberblick from '../components/produkteJahresueberblick.vue'
+
 import extraEinnahmen from '../components/extraEinnahmen.vue'
 import wartungsvertraege from '../components/wartungsvertraege.vue'
 import personal from '../components/personal.vue'
+import jahreskennzahlNeu from '../components/jahreskennzahlNeu.vue'
 
 export default {
     name: "home",
     components: {  
-        produkteJahresueberblick,
         extraEinnahmen,
         wartungsvertraege,
-        personal
+        personal,
+        jahreskennzahlNeu
     }
 }
 </script>
