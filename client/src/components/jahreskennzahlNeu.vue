@@ -1,46 +1,6 @@
 <template>
   <div>
     <b-table striped hover :items="calculateResults"></b-table>
-
-    testtestsetse
-    <li
-      v-if="
-        this.$store.getters.extraEinnahmen.length &&
-          this.$store.getters.wartungsvertraege.length &&
-          this.$store.getters.personal.length &&
-          this.$store.getters.kalkulierteKosten.length
-      "
-    >
-      <ul class="leistungen">
-        Wartungsverträge:
-        {{
-          this.$store.getters.wartungsvertraege[0][name]
-        }}
-      </ul>
-      <ul class="leistungen">
-        Extra Einnahmen:
-        {{
-          this.$store.getters.extraEinnahmen[0][name]
-        }}
-      </ul>
-      <ul class="kosten">
-        Personal (+ 13%):
-        {{
-          this.$store.getters.personal[0][name] * 1.13
-        }}
-      </ul>
-      <ul>
-        <br />
-      </ul>
-      <ul class="annotation">
-        Basierend auf 2019 kalkuliert:
-      </ul>
-      <ul class="kosten" v-for="item in itemsKalkulierteKosten" :key="item._id">
-        {{
-          item.nameKosten + ": " + item[name]
-        }}
-      </ul>
-    </li>
   </div>
 </template>
 
@@ -59,6 +19,13 @@ export default {
       gewinnTerraIndividual: 0,
       gewinnSonstige: 0,
       gewinnSumme: 0,
+      kalkulierteKostenList: [],
+      bFormOptionsKalkulierteKosten: [
+        "Gemeinkosten",
+        "Serverkosten",
+        "Nebenkosten",
+        "Vertriebskosten",
+      ],
     };
   },
   computed: {
@@ -90,7 +57,8 @@ export default {
         for (let j = 0; j < this.kostenleistungenAlle.length; j++) {
           await this.loadCalculateResults(i, this.kostenleistungenAlle[j]);
         }
-        this.pushToTableArray(null, this.gewinnTerraWeb, this.gewinnTerraSchueler, this.gewinnTerraIndividual, this.gewinnSonstige, this.gewinnSumme);
+        
+        this.pushToTableArray('Summe (abzüglich 199.920 € Gemeinkosten, basierend auf 2019)', this.gewinnTerraWeb, this.gewinnTerraSchueler, this.gewinnTerraIndividual, this.gewinnSonstige, this.gewinnSumme);
         this.pushToTableArray();
       }
     },
@@ -113,19 +81,19 @@ export default {
     },
     accumulateGewinnForYear(responseObjectFromApi) {
       if (responseObjectFromApi.kostenLeistung == "personal") {
-        this.gewinnTerraWeb -= responseObjectFromApi.terraWeb;
-        this.gewinnTerraSchueler -= responseObjectFromApi.terraSchüler;
-        this.gewinnTerraIndividual -= responseObjectFromApi.terraIndividual;
-        this.gewinnSonstige -= responseObjectFromApi.sonstige;
+        this.gewinnTerraWeb -= responseObjectFromApi.terraWeb  - 66640; //TODO: hardcoded gemeinkosten, very bad
+        this.gewinnTerraSchueler -= responseObjectFromApi.terraSchüler  - 66640;
+        this.gewinnTerraIndividual -= responseObjectFromApi.terraIndividual  - 66640;
+        this.gewinnSonstige -= responseObjectFromApi.sonstige ;
         this.gewinnSumme =
           -this.gewinnTerraWeb -
           this.gewinnTerraSchueler -
           this.gewinnTerraIndividual -
           this.gewinnSonstige;
       } else {
-        this.gewinnTerraWeb += responseObjectFromApi.terraWeb;
-        this.gewinnTerraSchueler += responseObjectFromApi.terraSchüler;
-        this.gewinnTerraIndividual += responseObjectFromApi.terraIndividual;
+        this.gewinnTerraWeb += responseObjectFromApi.terraWeb - 66640;
+        this.gewinnTerraSchueler += responseObjectFromApi.terraSchüler - 66640;
+        this.gewinnTerraIndividual += responseObjectFromApi.terraIndividual - 66640;
         this.gewinnSonstige += responseObjectFromApi.sonstige;
         this.gewinnSumme =
           this.gewinnTerraWeb +
@@ -155,9 +123,22 @@ export default {
       };
       this.calculateResults.push(object);
     },
+    async loadKalkulierteKostenFromApi() {
+      try {
+        for (let i = 0; i < this.bFormOptionsKalkulierteKosten.length; i++) {
+          const response = await api.get(
+            `/kalkulierteKosten/newest?namekosten=${this.bFormOptionsKalkulierteKosten[i]}`
+          );
+          this.kalkulierteKostenList.push(response.data[0])
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    }
   },
   mounted() {
     this.loadCalculateResultsForSeveralYears();
+    this.loadKalkulierteKostenFromApi()
   },
 };
 </script>
