@@ -54,6 +54,11 @@ export default {
       calculateResults: [],
       loadingExtraEinnahmen: false,
       kostenleistungenAlle: ["extraEinnahmen", "personal", "wartungsvertraege"],
+      gewinnTerraWeb: 0,
+      gewinnTerraSchueler: 0,
+      gewinnTerraIndividual: 0,
+      gewinnSonstige: 0,
+      gewinnSumme: 0,
     };
   },
   computed: {
@@ -76,10 +81,17 @@ export default {
   methods: {
     async loadCalculateResultsForSeveralYears() {
       for (let i = 2020; i < 2022; i++) {
-        this.pushToTableArray(i, )
+        this.pushToTableArray(i);
+        this.gewinnTerraWeb = 0;
+        this.gewinnTerraSchueler = 0;
+        this.gewinnTerraIndividual = 0;
+        this.gewinnSonstige = 0;
+        this.gewinnSumme = 0;
         for (let j = 0; j < this.kostenleistungenAlle.length; j++) {
           await this.loadCalculateResults(i, this.kostenleistungenAlle[j]);
         }
+        this.pushToTableArray(null, this.gewinnTerraWeb, this.gewinnTerraSchueler, this.gewinnTerraIndividual, this.gewinnSonstige, this.gewinnSumme);
+        this.pushToTableArray();
       }
     },
     async loadCalculateResults(year, kostenleistung) {
@@ -87,22 +99,62 @@ export default {
         const response = await api.get(
           `/calculateresults?jahr=${year}&kostenleistung=${kostenleistung}`
         );
-        this.pushToTableArray(response.data[0].kostenLeistung, response.data[0].terraWeb, response.data[0].terraSchüler, response.data[0].terraIndividual,response.data[0].sonstige )
-        
+        this.pushToTableArray(
+          response.data[0].kostenLeistung,
+          response.data[0].terraWeb,
+          response.data[0].terraSchüler,
+          response.data[0].terraIndividual,
+          response.data[0].sonstige
+        );
+        this.accumulateGewinnForYear(response.data[0]);
       } catch (err) {
         console.log(err);
       }
     },
+    accumulateGewinnForYear(responseObjectFromApi) {
+      if (responseObjectFromApi.kostenLeistung == "personal") {
+        this.gewinnTerraWeb -= responseObjectFromApi.terraWeb;
+        this.gewinnTerraSchueler -= responseObjectFromApi.terraSchüler;
+        this.gewinnTerraIndividual -= responseObjectFromApi.terraIndividual;
+        this.gewinnSonstige -= responseObjectFromApi.sonstige;
+        this.gewinnSumme =
+          -this.gewinnTerraWeb -
+          this.gewinnTerraSchueler -
+          this.gewinnTerraIndividual -
+          this.gewinnSonstige;
+      } else {
+        this.gewinnTerraWeb += responseObjectFromApi.terraWeb;
+        this.gewinnTerraSchueler += responseObjectFromApi.terraSchüler;
+        this.gewinnTerraIndividual += responseObjectFromApi.terraIndividual;
+        this.gewinnSonstige += responseObjectFromApi.sonstige;
+        this.gewinnSumme =
+          this.gewinnTerraWeb +
+          this.gewinnTerraSchueler +
+          this.gewinnTerraIndividual +
+          this.gewinnSonstige;
+      }
+    },
+    pushGewinnToArray() {},
     pushToTableArray(one, two, three, four, five) {
-        let object = {
-          kostenLeistung: one,
-          terraWeb: two,
-          terraSchüler: three,
-          terraIndividual: four,
-          sonstige: five,
-        }
-        this.calculateResults.push(object);
-    }
+      if (one == "personal") {
+        two *= -1;
+        three *= -1;
+        four *= -1;
+        five *= -1;
+      }
+      let object = {
+        kostenLeistung: one,
+        terraWeb: two,
+        terraSchüler: three,
+        terraIndividual: four,
+        sonstige: five,
+        Summe:
+          two + three + four + five
+            ? (two + three + four + five).toLocaleString("de")
+            : "",
+      };
+      this.calculateResults.push(object);
+    },
   },
   mounted() {
     this.loadCalculateResultsForSeveralYears();
