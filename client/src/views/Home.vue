@@ -1,8 +1,9 @@
 <template>
     <div> 
 <h3 style="text-align: center; padding: 0 0 7px 0">Kostenrechnung</h3>
+
         <jahreskennzahl-neu></jahreskennzahl-neu>
-        
+        <jahreskennzahl></jahreskennzahl>
         <extraEinnahmen></extraEinnahmen>
         <personal></personal>
         <wartungsvertraege></wartungsvertraege>
@@ -16,6 +17,7 @@ import extraEinnahmen from '../components/extraEinnahmen.vue'
 import wartungsvertraege from '../components/wartungsvertraege.vue'
 import personal from '../components/personal.vue'
 import jahreskennzahlNeu from '../components/jahreskennzahlNeu.vue'
+import jahreskennzahl from '../components/jahreskennzahl.vue'
 
 export default {
     name: "home",
@@ -23,7 +25,8 @@ export default {
         extraEinnahmen,
         wartungsvertraege,
         personal,
-        jahreskennzahlNeu
+        jahreskennzahlNeu,
+        jahreskennzahl
     }
 }
 </script>
