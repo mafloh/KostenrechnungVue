@@ -2,7 +2,7 @@
   <div>
     <b-table striped hover :items="calculateResults"></b-table>
     * Summe abzüglich 199.920 € Gemeinkosten, basierend auf 2019
-    <br></br>
+    <br><br>
   </div>
 </template>
 
