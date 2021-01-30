@@ -1,6 +1,8 @@
 <template>
   <div>
     <b-table striped hover :items="calculateResults"></b-table>
+    * Summe abzüglich 199.920 € Gemeinkosten, basierend auf 2019
+    <br></br>
   </div>
 </template>
 
@@ -11,7 +13,55 @@ export default {
   name: "jahreskennzahlItem",
   data() {
     return {
-      calculateResults: [],
+      calculateResults: [{
+          kostenLeistung: 2019,
+          terraWeb: '',
+          terraSchüler: '',
+          terraIndividual: '',
+          sonstige: '',
+          Summe: '',
+        },
+        {
+          kostenLeistung: 'extraEinnahmen',
+          terraWeb: 80944,
+          terraSchüler: 41700,
+          terraIndividual: 78110,
+          sonstige: 7691,
+          Summe: 80944+41700+78110+7691 ,
+        },
+        {
+          kostenLeistung: 'personal',
+          terraWeb: -134703,
+          terraSchüler: 143321,
+          terraIndividual: 130388,
+          sonstige: 0,
+          Summe: 408412,
+        },
+        {
+          kostenLeistung: 'wartungsvertraege',
+          terraWeb: 96053,
+          terraSchüler: 77133,
+          terraIndividual: 122387,
+          sonstige: 0,
+          Summe: 295573,
+        },
+        {
+          kostenLeistung: 'Summe*',
+          terraWeb: -14957,
+          terraSchüler: 67615,
+          terraIndividual: 39725,
+          sonstige: 7691,
+          Summe: -122297+ '*',
+        },
+        {
+          kostenLeistung: '',
+          terraWeb: '',
+          terraSchüler: '',
+          terraIndividual: '',
+          sonstige: '',
+          Summe: '',
+        },
+        ],
       loadingExtraEinnahmen: false,
       kostenleistungenAlle: ["extraEinnahmen", "personal", "wartungsvertraege"],
       gewinnTerraWeb: 0,
@@ -19,6 +69,8 @@ export default {
       gewinnTerraIndividual: 0,
       gewinnSonstige: 0,
       gewinnSumme: 0,
+      
+
       kalkulierteKostenList: [],
       bFormOptionsKalkulierteKosten: [
         "Gemeinkosten",
@@ -57,8 +109,15 @@ export default {
         for (let j = 0; j < this.kostenleistungenAlle.length; j++) {
           await this.loadCalculateResults(i, this.kostenleistungenAlle[j]);
         }
-        
-        this.pushToTableArray('Summe (abzüglich 199.920 € Gemeinkosten, basierend auf 2019)', this.gewinnTerraWeb, this.gewinnTerraSchueler, this.gewinnTerraIndividual, this.gewinnSonstige, this.gewinnSumme);
+
+        this.pushToTableArray(
+          "Summe*",
+          this.gewinnTerraWeb,
+          this.gewinnTerraSchueler,
+          this.gewinnTerraIndividual,
+          this.gewinnSonstige,
+          this.gewinnSumme
+        );
         this.pushToTableArray();
       }
     },
@@ -81,10 +140,11 @@ export default {
     },
     accumulateGewinnForYear(responseObjectFromApi) {
       if (responseObjectFromApi.kostenLeistung == "personal") {
-        this.gewinnTerraWeb -= responseObjectFromApi.terraWeb  - 66640; //TODO: hardcoded gemeinkosten, very bad
-        this.gewinnTerraSchueler -= responseObjectFromApi.terraSchüler  - 66640;
-        this.gewinnTerraIndividual -= responseObjectFromApi.terraIndividual  - 66640;
-        this.gewinnSonstige -= responseObjectFromApi.sonstige ;
+        this.gewinnTerraWeb -= responseObjectFromApi.terraWeb - 66640; //TODO: hardcoded gemeinkosten, very bad
+        this.gewinnTerraSchueler -= responseObjectFromApi.terraSchüler - 66640;
+        this.gewinnTerraIndividual -=
+          responseObjectFromApi.terraIndividual - 66640;
+        this.gewinnSonstige -= responseObjectFromApi.sonstige;
         this.gewinnSumme =
           -this.gewinnTerraWeb -
           this.gewinnTerraSchueler -
@@ -93,7 +153,8 @@ export default {
       } else {
         this.gewinnTerraWeb += responseObjectFromApi.terraWeb - 66640;
         this.gewinnTerraSchueler += responseObjectFromApi.terraSchüler - 66640;
-        this.gewinnTerraIndividual += responseObjectFromApi.terraIndividual - 66640;
+        this.gewinnTerraIndividual +=
+          responseObjectFromApi.terraIndividual - 66640;
         this.gewinnSonstige += responseObjectFromApi.sonstige;
         this.gewinnSumme =
           this.gewinnTerraWeb +
@@ -129,16 +190,16 @@ export default {
           const response = await api.get(
             `/kalkulierteKosten/newest?namekosten=${this.bFormOptionsKalkulierteKosten[i]}`
           );
-          this.kalkulierteKostenList.push(response.data[0])
+          this.kalkulierteKostenList.push(response.data[0]);
         }
       } catch (err) {
         console.log(err);
       }
-    }
+    },
   },
   mounted() {
     this.loadCalculateResultsForSeveralYears();
-    this.loadKalkulierteKostenFromApi()
+    this.loadKalkulierteKostenFromApi();
   },
 };
 </script>
