@@ -153,16 +153,16 @@ export default {
   methods: {
     async reload() {
       try {
-        const response = await api.get("/personal");
-        this.personalList = response.data;
-        this.submitCalculateResultToStore(response.data);
+        const response = await api.get("/personal")
+        this.personalList = response.data
+        this.submitCalculateResultToStore(response.data)
       } catch (err) {
         console.log(err);
       }
     },
     async submit() {
-      const res = await api.post(`/personal`, this.newPersonal);
-      if (res.status === 200) await this.reload();
+      const res = await api.post(`/personal`, this.newPersonal)
+      if (res.status === 200) await this.reload()
       this.submitCalculateResult();
     },
     async removeItem(id) {
@@ -198,7 +198,10 @@ export default {
         if (res.status === 200) await this.reload()
       })
     },
-    submitCalculateResultToStore(array) {
+    
+    async submitCalculateResultToStore(array) {
+      const response = await api.get("/personal");
+      this.personalList = response.data;
       const total = this.totalPersonal(array)
       const totalCurrentYear = total.filter(item => item.jahr === this.$store.getters.jahr)
       this.$store.dispatch("updatePersonal", totalCurrentYear)
@@ -266,7 +269,10 @@ export default {
         return summedByYear
         
         //Promise.resolve('Success') //necessary??
-      }
+      },
+      formatNumber (nr) {
+      return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(nr)
+    }
   },
   async mounted() {
     api

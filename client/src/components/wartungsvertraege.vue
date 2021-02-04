@@ -163,6 +163,7 @@
                     {{ new Date(item[field.key]).toLocaleDateString() }}
                      </span>
                     <span v-else>{{item[field.key]}}</span>
+                    
                 </b-th>
 
                 <b-th>
@@ -317,7 +318,10 @@ export default {
         //this.$emit('updateprodukte')
         //console.log("updateprodukte")
       },
-      submitCalculateResultToStore(array) {
+      async submitCalculateResultToStore(array) {
+        const response = await api
+         .get('/wartungsvertraege')
+        this.wartungsvertraegeList = response.data
         const total = this.totalWartungsvertraege(array)
         const totalCurrentYear = total.filter(item => item.jahr === this.$store.getters.jahr)
         //console.log(totalCurrentYear)

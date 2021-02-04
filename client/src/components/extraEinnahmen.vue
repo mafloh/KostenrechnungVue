@@ -115,7 +115,7 @@
           const response = await api
             .get('/extraEinnahmen')
           this.extraEinnahmenList = response.data
-          this.submitCalculateResultToStore(response.data)
+          this.submitCalculateResultToStore()
         } catch(err) {
           console.log(err)
         }
@@ -156,12 +156,15 @@
         this.$store.dispatch("updateExtraEinnahmen", totalCurrentYear)
         total.forEach(async (item) => {
           const res = api.post(`/calculateResults`, item);
-          if (res.status === 200) await this.reload();
+          if (res.status === 200) await this.reload()
         })
         
       },
-      submitCalculateResultToStore(array) {
-        const total = this.totalExtraEinnahmen(array)
+      async submitCalculateResultToStore() {
+        const response = await api
+          .get('/extraEinnahmen')
+        this.extraEinnahmenList = response.data
+        const total = this.totalExtraEinnahmen(this.extraEinnahmenList)
         const totalCurrentYear = total.filter(item => item.jahr === this.$store.getters.jahr)
         //console.log(totalCurrentYear)
         this.$store.dispatch("updateExtraEinnahmen", totalCurrentYear)
@@ -218,6 +221,9 @@
 </script>
 
 <style scoped>
+.h2 {
+    background-color:  Lavender
+}
 
  
 </style>

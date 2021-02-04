@@ -2,12 +2,15 @@
   <div>
     <li>
       <h3
+
         
       >{{ produkt.name }} : {{ this.$store.getters.wartungsvertraege[0][produkt.name] + this.$store.getters.extraEinnahmen[0][produkt.name] - this.$store.getters.personal[0][produkt.name] * 1.13 - this.$store.getters.kalkulierteKosten[0][produkt.name] - this.$store.getters.kalkulierteKosten[1][produkt.name] - this.$store.getters.kalkulierteKosten[2][produkt.name] - this.$store.getters.kalkulierteKosten[3][produkt.name]}}</h3>
+
 
       <jahreskennzahlItem v-bind:name="produkt.name" v-bind:calculate-results="calculateResults"></jahreskennzahlItem>
     </li>
   </div>
+  
 </template>
 
 <script>
@@ -41,6 +44,10 @@ export default {
       } catch (err) {
         console.log(err)
       }
+    },
+    formatNumber (nr) {
+      const nrRounded = Math.round(nr)
+      return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR'}).format(nrRounded)
     }
   },
   watch: {
