@@ -1,7 +1,9 @@
 <template>
   <div id="produktJahresueberblick">
     <hr />
+
     <ul >
+
       <produkt-item
         v-for="item in produktList"
         v-bind:produkt="item"
@@ -205,6 +207,7 @@ export default {
           "updateKalkulierteKosten",
           this.kalkulierteKostenList
         )
+
         /* 
         // Write total to DB if changed (not functioning yet)
         const totalDb = await api.get(`/calculateResults?kostenleistung=total`)
