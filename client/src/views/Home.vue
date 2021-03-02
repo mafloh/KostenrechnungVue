@@ -6,25 +6,31 @@
     </div>
     <div v-if="this.$store.getters.password === 'rennrad'">
       <h3 style="text-align: center; padding: 0 0 7px 0">
-        Kostenrechnung ab 2020
+        Kostenrechnung ab 2019
       </h3>
 
       <jahreskennzahl-neu></jahreskennzahl-neu>
+      
       <jahreskennzahl></jahreskennzahl>
 
       <produkte-jahresueberblick></produkte-jahresueberblick>
 
-      <extraEinnahmen></extraEinnahmen>
-      <br />
-      <hr />
-      <hr />
-      <br />
-      <personal></personal>
-      <br />
-      <hr />
-      <hr />
-      <br />
-      <wartungsvertraege></wartungsvertraege>
+    <b-button v-b-toggle.collapse-extra class="m-1">Extra-Einnahmen</b-button>
+    <b-button v-b-toggle.collapse-personal class="m-1">Personal</b-button>
+    <b-button v-b-toggle.collapse-wartung class="m-1">Wartungsverträge</b-button>
+  <b-collapse id="collapse-extra">
+    <extraEinnahmen></extraEinnahmen>
+  </b-collapse>
+  <b-collapse id="collapse-personal">
+    <personal></personal>
+  </b-collapse>
+  <b-collapse id="collapse-wartung">
+    <wartungsvertraege></wartungsvertraege>
+  </b-collapse>
+    
+      
+      
+      
     </div>
   </div>
 </template>
@@ -48,6 +54,7 @@ export default {
   data() {
     return {
       input: "",
+      activeCollapse: [],
     };
   },
   methods: {
