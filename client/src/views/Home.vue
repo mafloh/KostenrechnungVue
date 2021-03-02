@@ -9,28 +9,31 @@
         Kostenrechnung ab 2019
       </h3>
 
-      <jahreskennzahl-neu></jahreskennzahl-neu>
-      
-      <jahreskennzahl></jahreskennzahl>
+      <b-button v-b-toggle.collapse-result class="m-1"
+        >Ergebnistabelle ein-/ausblenden</b-button
+      >
+      <b-collapse visible id="collapse-result">
+        <jahreskennzahl-neu></jahreskennzahl-neu>
 
-      <produkte-jahresueberblick></produkte-jahresueberblick>
+        <jahreskennzahl></jahreskennzahl>
 
-    <b-button v-b-toggle.collapse-extra class="m-1">Extra-Einnahmen</b-button>
-    <b-button v-b-toggle.collapse-personal class="m-1">Personal</b-button>
-    <b-button v-b-toggle.collapse-wartung class="m-1">Wartungsverträge</b-button>
-  <b-collapse id="collapse-extra">
-    <extraEinnahmen></extraEinnahmen>
-  </b-collapse>
-  <b-collapse id="collapse-personal">
-    <personal></personal>
-  </b-collapse>
-  <b-collapse id="collapse-wartung">
-    <wartungsvertraege></wartungsvertraege>
-  </b-collapse>
-    
-      
-      
-      
+        <produkte-jahresueberblick></produkte-jahresueberblick>
+      </b-collapse>
+
+      <b-button v-b-toggle.collapse-extra class="m-1">Extra-Einnahmen</b-button>
+      <b-button v-b-toggle.collapse-personal class="m-1">Personal</b-button>
+      <b-button v-b-toggle.collapse-wartung class="m-1"
+        >Wartungsverträge</b-button
+      >
+      <b-collapse id="collapse-extra">
+        <extraEinnahmen></extraEinnahmen>
+      </b-collapse>
+      <b-collapse id="collapse-personal">
+        <personal></personal>
+      </b-collapse>
+      <b-collapse id="collapse-wartung">
+        <wartungsvertraege></wartungsvertraege>
+      </b-collapse>
     </div>
   </div>
 </template>

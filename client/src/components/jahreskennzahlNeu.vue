@@ -1,8 +1,10 @@
 <template>
   <div>
+    
     <b-table striped hover :items="calculateResults"></b-table>
-    * Summe abzüglich 199.920 € Gemeinkosten, basierend auf 2019
+    * Summe beinhaltet Abzug von 199.920 € Gemeinkosten pro Jahr, basierend auf 2019.
     <br><br>
+    
   </div>
 </template>
 
