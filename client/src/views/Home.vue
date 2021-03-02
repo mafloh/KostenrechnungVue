@@ -1,17 +1,17 @@
 <template>
     <div> 
+        <div v-if="this.$store.getters.password === '' ">
+            <input v-model="input" placeholder="Bitte Passwort eingeben">
+            <button @click="submit()">ok</button>
 
+        </div>
     <div v-if="this.$store.getters.password === 'rennrad' ">
 <h3 style="text-align: center; padding: 0 0 7px 0">Kostenrechnung ab 2020</h3>
 
         <jahreskennzahl-neu></jahreskennzahl-neu>
         <jahreskennzahl></jahreskennzahl>
 
-        <div v-if="this.$store.getters.password === '' ">
-            <input v-model="input" placeholder="Bitte Passwort eingeben">
-            <button @click="submit()">ok</button>
-
-        </div>
+        
 
         
 
