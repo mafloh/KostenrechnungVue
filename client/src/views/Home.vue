@@ -12,7 +12,7 @@
       <b-button v-b-toggle.collapse-result class="m-1"
         >Ergebnistabelle ein-/ausblenden</b-button
       >
-      <b-collapse visible id="collapse-result">
+      <b-collapse id="collapse-result">
         <jahreskennzahl-neu></jahreskennzahl-neu>
 
         <jahreskennzahl></jahreskennzahl>
