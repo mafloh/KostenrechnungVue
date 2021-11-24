@@ -44,6 +44,8 @@ import wartungsvertraege from "../components/wartungsvertraege.vue";
 import personal from "../components/personal.vue";
 import jahreskennzahlNeu from "../components/jahreskennzahlNeu.vue";
 import jahreskennzahl from "../components/jahreskennzahl.vue";
+import produkteJahresueberblick from "../components/produkteJahresueberblick.vue";
+
 
 export default {
   name: "home",
@@ -53,6 +55,7 @@ export default {
     personal,
     jahreskennzahlNeu,
     jahreskennzahl,
+    produkteJahresueberblick
   },
   data() {
     return {
