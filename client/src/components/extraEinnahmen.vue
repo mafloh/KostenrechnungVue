@@ -121,12 +121,15 @@
         }
       },
       async submit() {
-        const res = await api.post(`/extraeinnahmen`, this.newExtraEinnahme)
+        try {
+          const res = await api.post(`/extraeinnahmen`, this.newExtraEinnahme)
         if (res.status === 200) {
           this.submitCalculateResult()
           this.extraEinnahmenList.push(this.newExtraEinnahme)
-          
           }
+        } catch (error) {
+          alert('Eintrag nicht erstellt, wahrscheinlich wurden nicht alle benötigten Felder ausgefüllt.')
+        }
         
       },
       async removeItem(id) {

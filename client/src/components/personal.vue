@@ -161,10 +161,15 @@ export default {
       }
     },
     async submit() {
-      const res = await api.post(`/personal`, this.newPersonal)
+      try {
+        const res = await api.post(`/personal`, this.newPersonal)
       if (res.status === 200) {
         this.submitCalculateResult()
         this.personalList.push(this.newPersonal)}
+      } catch (error) {
+        alert('Eintrag nicht erstellt, wahrscheinlich wurden nicht alle benötigten Felder ausgefüllt.')
+      }
+      
     },
     async removeItem(id) {
       const res = await api.delete(`/personal/${id}`);

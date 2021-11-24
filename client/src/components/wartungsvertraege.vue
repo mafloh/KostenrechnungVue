@@ -291,10 +291,15 @@ export default {
             }
         },
         async submit() {
-            const res = await api.post(`/wartungsvertraege`, this.newWartungsvertrag)
+            try {
+                const res = await api.post(`/wartungsvertraege`, this.newWartungsvertrag)
             if (res.status === 200) {
                 this.submitCalculateResult()
                 this.wartungsvertraegeList.push(this.newWartungsvertrag)
+            }
+            
+            } catch (error) {
+                alert('Eintrag nicht erstellt, wahrscheinlich wurden nicht alle benötigten Felder ausgefüllt.')
             }
             
         },
