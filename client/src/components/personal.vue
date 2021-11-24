@@ -162,8 +162,9 @@ export default {
     },
     async submit() {
       const res = await api.post(`/personal`, this.newPersonal)
-      if (res.status === 200) await this.reload()
-      this.submitCalculateResult();
+      if (res.status === 200) {
+        this.submitCalculateResult()
+        this.personalList.push(this.newPersonal)}
     },
     async removeItem(id) {
       const res = await api.delete(`/personal/${id}`);

@@ -292,8 +292,10 @@ export default {
         },
         async submit() {
             const res = await api.post(`/wartungsvertraege`, this.newWartungsvertrag)
-            if (res.status === 200) await this.reload()
-            this.submitCalculateResult()
+            if (res.status === 200) {
+                this.submitCalculateResult()
+                this.wartungsvertraegeList.push(this.newWartungsvertrag)
+            }
             
         },
         async updateItem(id, itemToUpdate) {

@@ -122,8 +122,11 @@
       },
       async submit() {
         const res = await api.post(`/extraeinnahmen`, this.newExtraEinnahme)
-        if (res.status === 200) await this.reload()
-        this.submitCalculateResult()
+        if (res.status === 200) {
+          this.submitCalculateResult()
+          this.extraEinnahmenList.push(this.newExtraEinnahme)
+          
+          }
         
       },
       async removeItem(id) {
